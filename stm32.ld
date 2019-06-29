@@ -1,3 +1,5 @@
+/* Source: https://jacobmossberg.se/posts/2018/08/11/run-c-program-bare-metal-on-arm-cortex-m3.html */
+
 SECTIONS
 {
     .  = 0x0;         /* From 0x00000000 */

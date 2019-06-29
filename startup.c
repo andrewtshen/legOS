@@ -1,3 +1,5 @@
+/* Source: https://jacobmossberg.se/posts/2018/08/11/run-c-program-bare-metal-on-arm-cortex-m3.html */
+
 #define STACK_TOP 0x20005000
 
 extern unsigned int _BSS_START;
