@@ -1,9 +1,11 @@
 #ifndef UART_H
 #define UART_H
 
-void print_str(const char *s);
-void print_int(unsigned int s);
-void read_str(char a[]);
+void write_str(const char *s);
+void write_int(unsigned int s);
+void read_str(char* buf, int count);
 void read_int(unsigned int* a);
+void write(char c);
+char read();
 
 #endif

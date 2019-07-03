@@ -5,46 +5,46 @@ volatile unsigned int * const UART0FR = (unsigned int *)0x4000C018;
 
 char read() {
     while (!((*UART0FR >> 6) & 1)) {
-        continue;
+        // wait while transmit buffer is empty
     }
     return *UART0DR;
 }
 
-/*void write(char c) {*/
-    /*while (busy) {*/
-        /*// wait*/
-    /*}*/
-    /*send_byte(c);*/
-/*}*/
+void write(char c) {
+    while ((*UART0FR >> 5) & 1) {
+        // wait while recieve buffer is full
+    }
+    *UART0DR = c;
+}
 
-void print_str(const char* s) {
+void write_str(const char* s) {
     while (*s != '\0') {
-        *UART0DR = (unsigned int)*s;
+        write(*s);
         s++;
     }
 }
 
-void print_int(unsigned int s) {
+void write_int(unsigned int s) {
     if (s < 10) {
-        *UART0DR = s + 48;
+        write(s + 48);
     } else {
-        print_int(s / 10);
-        print_int(s % 10);
+        write_int(s / 10);
+        write_int(s % 10);
     }
 }
 
-void read_str(char a[]) {
-    int curr = 0;
-    while (1) {
-        a[curr] = read();
+void read_str(char* buf, int count) {
+    
+    for (int i = 0; i < count; i++) {    
+        buf[i] = read();
         
         // Continue until we see carriage return
-        if (a[curr] != '\r') {
-            curr++;
-        } else {
-            break;
+        if (buf[i] == '\r') {
+            buf[i] = '\0';
+            return;
         }
     }
+    buf[count-1] = '\0';
 }
 
 void read_int(unsigned int* a) {

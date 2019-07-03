@@ -7,10 +7,12 @@ static int sum;
 
 void main() {
     char a[10];
-    read_str(a); 
-    print_str(a);
+    read_str(a, 10); 
+    write_str(a);
+    write('\n');
 
     unsigned int b;
     read_int(&b);
-    print_int(b);
+    write_int(b);
+    write('\n');
 }
