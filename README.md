@@ -1,2 +1,2 @@
-# shenOS
+# legOS
 andrew's OS
