@@ -3,10 +3,14 @@
 static const int a = 7;
 static int b = 8;
 static int sum;
-static int onemore = 0;
+/*static int onemore = 0;*/
 
 void main() {
-    sum = a+b;
-    onemore = one() + b;
-    print_uart0("hello world");
+    char a[10];
+    read_str(a); 
+    print_str(a);
+
+    unsigned int b;
+    read_int(&b);
+    print_int(b);
 }

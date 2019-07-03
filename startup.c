@@ -46,4 +46,6 @@ void startup()
 
     /* Now we are ready to start the main function */
     main();
+
+    while(1) {};
 }
