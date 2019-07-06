@@ -30,4 +30,6 @@ SECTIONS
         *(.bss)       /* Zero-filled run time allocate data memory */
     }
     _BSS_END = .;     /* Indicates where BSS section ends in RAM */
+
+    _STACK_TOP = 0x20005000;
 }  
