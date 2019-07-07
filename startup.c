@@ -4,6 +4,8 @@
  * */
 
 /*#define STACK_TOP 0x20005000*/
+
+#include "UART.h"
 extern void _STACK_TOP;
 
 extern unsigned int _BSS_START;
@@ -28,29 +30,8 @@ void __attribute__((weak)) PendSV_Handler(void);    /* PendSV Handler */
 void __attribute__((weak)) SysTick_Handler(void);   /* SysTick Handler */
 
 /* Define the vector table */
-/*unsigned int * myvectors[2] */
-/*__attribute__ ((section("vectors")))= {*/
-    /*(unsigned int *)    STACK_TOP,          // stack pointer*/
-    /*(unsigned int *)    &Reset_Handler,     // The reset handler*/
-    /*(unsigned int *)    &NMI_Handler,       // The NMI handler*/
-    /*(unsigned int *)    &HardFault_Handler, // The hard fault handler*/
-    /*(unsigned int *)    &MemManage_Handler, // The MPU fault handler*/
-    /*(unsigned int *)    &BusFault_Handler,  // The bus fault handler*/
-    /*(unsigned int *)    &UsageFault_Handler,// The usage fault handler*/
-    /*(unsigned int *)    0,                  // Reserved*/
-    /*(unsigned int *)    0,                  // Reserved*/
-    /*(unsigned int *)    0,                  // Reserved*/
-    /*(unsigned int *)    0,                  // Reserved*/
-    /*(unsigned int *)    &SVC_Handler,       // SVCall handler*/
-    /*(unsigned int *)    &DebugMon_Handler,  // Debug monitor handler*/
-    /*(unsigned int *)    0,                  // Reserved*/
-    /*(unsigned int *)    &PendSV_Handler,    // The PendSV handler*/
-    /*(unsigned int *)    &SysTick_Handler,   // The SysTick handler*/
-    /*(unsigned int *)    startup             // code entry point*/
-/*};*/
-
 __attribute__ ((section("vectors")))
-void (* const g_pfnVectors[])(void) = {
+void (* const vectortable[])(void) = {
     &_STACK_TOP,        // The initial stack pointer
     Reset_Handler,      // The reset handler
     NMI_Handler,        // The NMI handler
@@ -80,22 +61,21 @@ void Default_Handler(void);
 #pragma weak SysTick_Handler    = Default_Handler /* SysTick Handler */
 
 void Default_Handler(void) {
-    /*while (1);*/
+    while (1);
 }
 
 typedef void (*svcall_t)(void*);
  
 void SVC_Handler(void) {
-  register int * frame;
-  register svcall_t call;
-  register void * args;
-  asm volatile ("MRS %0, psp\n\t" : "=r" (frame) ); //assumes PSP in use when service_call() invoked
-  call = (svcall_t)frame[0];
-  args = (void*)(frame[1]);
-  call(args);
+    unsigned int * cpuid = (unsigned int *)0xE000ED00;
+    int val = *cpuid;
+    write_str("Value: ");
+    writeln_str("Reading CPUID in Kernel Mode (with SVC)");
+    writeln_int(*cpuid);
 }
 
 void Reset_Handler(void) {
+    // On reset, call startup and main
     startup();
     main();
 
