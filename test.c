@@ -3,7 +3,6 @@
 #include "priv.h"
 #include "MPU.h"
 
-volatile unsigned int * const SYSTICK = (unsigned int *)0xE000E01C;
 volatile unsigned int * const CPUID = (unsigned int *)0xE000ED00;
 
 void test_privileges() {

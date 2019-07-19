@@ -8,8 +8,9 @@ SECTIONS
 
     _USER_TEXT_START = .; /* Text always starts at 0x20006000 */
     .text : 
-    {
-        *(.text)     /* Text data */
+    {   
+        KEEP(*(.init_text))
+        *(.text)          /* Text data */
     }
 
     _USER_ROM_START = .;

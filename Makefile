@@ -15,14 +15,16 @@ KERN_OBJFILES := \
 	startup.o \
 	test.o \
 	UART.o \
+	user.bin.o \
 
 USER_OBJFILES := \
+	user_startup.o \
 	sum.o \
 	user.o \
 
+
 ARM_C_FLAGS=-O0 -c -g -mcpu=cortex-m3 -mthumb
 ARM_LD_FLAGS=-Tstm32.ld
-ARM_OBJCOPY_FLAGS=-O binary
 QEMU_FLAGS=-M lm3s6965evb -m 128M -nographic -serial mon:stdio
 
 KERNEL=kernel
@@ -32,7 +34,13 @@ USER=user
 all: $(KERNEL).bin $(USER).elf
 
 $(KERNEL).bin: $(KERNEL).elf
-	$(ARM_OBJCOPY) $(ARM_OBJCOPY_FLAGS) $< $@
+	$(ARM_OBJCOPY) -O binary $< $@
+
+$(USER).bin: $(USER).elf
+	$(ARM_OBJCOPY) -O binary $< $@
+
+$(USER).bin.o: $(USER).bin
+	$(ARM_OBJCOPY) -I binary -B arm -O elf32-littlearm --rename-section .data=.rodata,contents,alloc,load,readonly,data $< $@ 
 
 $(KERNEL).elf: $(KERN_OBJFILES)
 	$(ARM_LD) $(ARM_LD_FLAGS) -o $@ $^
@@ -41,6 +49,9 @@ $(USER).elf: $(USER_OBJFILES)
 	$(ARM_LD) $(ARM_LD_FLAGS) -o $@ $^
 
 %.o: %.c $(HEADERFILES)
+	$(ARM_CC) $(ARM_C_FLAGS) -o $@ $<
+
+%.o: %.s $(HEADERFILES)
 	$(ARM_CC) $(ARM_C_FLAGS) -o $@ $<
 
 .PHONY: clean
