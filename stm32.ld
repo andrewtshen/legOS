@@ -13,7 +13,9 @@ SECTIONS
     }
     _DATA_ROM_START = .;
 
-    .  = 0x20000000;  /* From 0x20000000 */      
+    _STACK_TOP = 0x20001000;
+
+    .  = 0x20001000;  /* Put RAM after Stack */      
 
     _DATA_RAM_START = .;
     .data : AT(_DATA_ROM_START) 
@@ -29,5 +31,5 @@ SECTIONS
     }
     _BSS_END = .;     /* Indicates where BSS section ends in RAM */
 
-    _STACK_TOP = 0x20005000;
-}  
+    _USER_START = 0x20005000; /* Indicates where User Program Starts in RAM */
+}
