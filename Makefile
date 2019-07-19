@@ -4,24 +4,57 @@ MAKEFLAGS += -R
 ARM_CC=arm-none-eabi-gcc
 ARM_LD=arm-none-eabi-ld
 ARM_OBJCOPY=arm-none-eabi-objcopy
+ARM_QEMU=qemu-system-arm
+ARM_GDB=arm-none-eabi-gdb
 
 HEADERFILES := $(wildcard *.h)
-OBJFILES := $(patsubst %.c, %.o, $(wildcard *.c))
+KERN_OBJFILES := \
+	kernel.o \
+	MPU.o \
+	priv.o \
+	startup.o \
+	test.o \
+	UART.o \
 
-ARM_C_FLAGS=-O0 -c -g -mcpu=cortex-m3 -mthumb -o
-ARM_LD_FLAGS=-Tstm32.ld -o
+USER_OBJFILES := \
+	sum.o \
+	user.o \
+
+ARM_C_FLAGS=-O0 -c -g -mcpu=cortex-m3 -mthumb
+ARM_LD_FLAGS=-Tstm32.ld
 ARM_OBJCOPY_FLAGS=-O binary
+QEMU_FLAGS=-M lm3s6965evb -m 128M -nographic -serial mon:stdio
 
-MAIN=main
+KERNEL=kernel
+USER=user
 
-$(MAIN).bin: $(MAIN).elf
+.PHONY: all
+all: $(KERNEL).bin $(USER).elf
+
+$(KERNEL).bin: $(KERNEL).elf
 	$(ARM_OBJCOPY) $(ARM_OBJCOPY_FLAGS) $< $@
 
-$(MAIN).elf: $(OBJFILES)
-	$(ARM_LD) $(ARM_LD_FLAGS) $@ $^
+$(KERNEL).elf: $(KERN_OBJFILES)
+	$(ARM_LD) $(ARM_LD_FLAGS) -o $@ $^
+
+$(USER).elf: $(USER_OBJFILES)
+	$(ARM_LD) $(ARM_LD_FLAGS) -o $@ $^
 
 %.o: %.c $(HEADERFILES)
-	$(ARM_CC) $(ARM_C_FLAGS) $@ $<
+	$(ARM_CC) $(ARM_C_FLAGS) -o $@ $<
 
+.PHONY: clean
 clean:
-	rm *.o *.elf *.bin
+	rm -f *.o *.elf *.bin
+
+.PHONY: qemu
+qemu: $(KERNEL).bin
+	$(ARM_QEMU) $(QEMU_FLAGS) -kernel $<
+
+.PHONY: qemu-gdb
+qemu-gdb: $(KERNEL).bin 
+	$(ARM_QEMU) $(QEMU_FLAGS) -S -s -kernel $<
+
+.PHONY: gdb
+gdb: $(KERNEL).elf
+	$(ARM_GDB) $<
