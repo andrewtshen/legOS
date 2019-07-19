@@ -1,12 +1,10 @@
-/* Sources:
+/* Help:
  * https://jacobmossberg.se/posts/2018/08/11/run-c-program-bare-metal-on-arm-cortex-m3.html 
  * https://embeddedfreak.wordpress.com/2009/08/07/cortex-m3-interrupt-vector-table/
  * */
 
-/*#define STACK_TOP 0x20005000*/
-
 #include "UART.h"
-extern void _STACK_TOP;
+extern unsigned int _STACK_TOP;
 
 extern unsigned int _BSS_START;
 extern unsigned int _BSS_END;
@@ -31,7 +29,7 @@ void __attribute__((weak)) SysTick_Handler(void);   /* SysTick Handler */
 
 /* Define the vector table */
 __attribute__ ((section("vectors")))
-void (* const vectortable[])(void) = {
+void* vectortable[] = {
     &_STACK_TOP,        // The initial stack pointer
     Reset_Handler,      // The reset handler
     NMI_Handler,        // The NMI handler
@@ -61,6 +59,7 @@ void Default_Handler(void);
 #pragma weak SysTick_Handler    = Default_Handler /* SysTick Handler */
 
 void Default_Handler(void) {
+    writeln_str("In Default_Handler!");
     while (1);
 }
 

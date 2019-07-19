@@ -1,4 +1,4 @@
-/* source: https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/ */
+/* Help: https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/ */
 
 #include "UART.h"
 
@@ -87,5 +87,3 @@ void read_int(unsigned int* a) {
     }
     write('\n'); // Nice printing
 }
-
-
