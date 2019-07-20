@@ -18,9 +18,9 @@ KERN_OBJFILES := \
 	user.bin.o \
 
 USER_OBJFILES := \
-	user_startup.o \
-	sum.o \
 	user.o \
+	user_startup.o \
+# 	sum.o \
 
 
 ARM_C_FLAGS=-O0 -c -g -mcpu=cortex-m3 -mthumb

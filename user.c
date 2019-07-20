@@ -1,5 +1,3 @@
-#include "sum.h"
-
 int main() {
-	return 0;
+	return 8;
 }

@@ -49,23 +49,55 @@ void* vectortable[] = {
 };
 
 void Default_Handler(void);
-#pragma weak NMI_Handler        = Default_Handler /* NMI handler */
-#pragma weak HardFault_Handler  = Default_Handler /* Hard Fault handler */
-#pragma weak MemManage_Handler  = Default_Handler /* MPU Fault Handler */
-#pragma weak BusFault_Handler   = Default_Handler /* Bus Fault Handler */
-#pragma weak UsageFault_Handler = Default_Handler /* Usage Fault Handler */
-#pragma weak DebugMon_Handler   = Default_Handler /* Debug Monitor Handler */
-#pragma weak PendSV_Handler     = Default_Handler /* PendSV Handler */
-#pragma weak SysTick_Handler    = Default_Handler /* SysTick Handler */
+// #pragma weak NMI_Handler        = Default_Handler /* NMI handler */
+// #pragma weak HardFault_Handler  = Default_Handler /* Hard Fault handler */
+// #pragma weak MemManage_Handler  = Default_Handler /* MPU Fault Handler */
+// #pragma weak BusFault_Handler   = Default_Handler /* Bus Fault Handler */
+// #pragma weak UsageFault_Handler = Default_Handler /* Usage Fault Handler */
+// #pragma weak DebugMon_Handler   = Default_Handler /* Debug Monitor Handler */
+// #pragma weak PendSV_Handler     = Default_Handler /* PendSV Handler */
+// #pragma weak SysTick_Handler    = Default_Handler /* SysTick Handler */
+
+void NMI_Handler(void) {
+    writeln_str("In NMI_Handler!");
+    while(1);
+}
+void HardFault_Handler(void) {
+    writeln_str("In HardFault_Handler!");
+    while(1);
+}
+void MemManage_Handler(void) {
+    writeln_str("In MemManage_Handler!");
+    while(1);
+}
+void BusFault_Handler(void) {
+    writeln_str("In BusFault_Handler!");
+    while(1);
+}
+void UsageFault_Handler(void) {
+    writeln_str("In UsageFault_Handler!");
+    while(1);
+}
+void DebugMon_Handler(void) {
+    writeln_str("In DebugMon_Handler!");
+    while(1);
+}
+void PendSV_Handler(void) {
+    writeln_str("In PendSV_Handler!");
+    while(1);
+}
+void SysTick_Handler(void) {
+    writeln_str("In SysTick_Handler!");
+    while(1);
+}
 
 void Default_Handler(void) {
     writeln_str("In Default_Handler!");
     while (1);
 }
-
-typedef void (*svcall_t)(void*);
  
 void SVC_Handler(void) {
+    /* Testing that SVCall puts us in Kernel Mode */
     unsigned int * cpuid = (unsigned int *)0xE000ED00;
     int val = *cpuid;
     write_str("Value: ");
