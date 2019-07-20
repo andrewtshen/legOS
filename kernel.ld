@@ -1,3 +1,5 @@
+INCLUDE "mem.ld"
+
 SECTIONS
 {
     .  = 0x0;         /* From 0x00000000 */
@@ -30,6 +32,4 @@ SECTIONS
         *(.bss)       /* Zero-filled run time allocate data memory */
     }
     _BSS_END = .;     /* Indicates where BSS section ends in RAM */
-
-    _USER_START = 0x20005000; /* Indicates where User Program Starts in RAM */
 }

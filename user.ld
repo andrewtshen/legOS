@@ -1,15 +1,13 @@
+INCLUDE "mem.ld"
+
 SECTIONS
 {
-    . = 0x20005000;         /* Start of User Program */
-    _USER_START = .;
-
     . = 0x20006000;         /* 0x20005000 - 0x20006000 is the stack */
     _STACK_TOP = .;
-
-    _USER_TEXT_START = .;   /* Text always starts at 0x20006000 */
+    
     .text : 
     {   
-        KEEP(*(.init_text))
+        KEEP(*(.init_text)) /* ASM to main function */
         *(.text)            /* Text data */
     }
 

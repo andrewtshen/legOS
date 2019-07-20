@@ -20,11 +20,12 @@ KERN_OBJFILES := \
 USER_OBJFILES := \
 	user.o \
 	user_startup.o \
-# 	sum.o \
+	sum.o \
 
+GLOABL_LINKERFILES := \
+	mem.ld
 
 ARM_C_FLAGS=-O0 -c -g -mcpu=cortex-m3 -mthumb
-ARM_LD_FLAGS=-Tstm32.ld
 QEMU_FLAGS=-M lm3s6965evb -m 128M -nographic -serial mon:stdio
 
 KERNEL=kernel
@@ -43,10 +44,13 @@ $(USER).bin.o: $(USER).bin
 	$(ARM_OBJCOPY) -I binary -B arm -O elf32-littlearm --rename-section .data=.rodata,contents,alloc,load,readonly,data $< $@ 
 
 $(KERNEL).elf: $(KERN_OBJFILES)
-	$(ARM_LD) $(ARM_LD_FLAGS) -o $@ $^
+	$(ARM_LD) -Tkernel.ld -o $@ $^
 
 $(USER).elf: $(USER_OBJFILES)
-	$(ARM_LD) $(ARM_LD_FLAGS) -o $@ $^
+	$(ARM_LD) -Tuser.ld -o $@ $^
+
+$(USER).ld: $(GLOABL_LINKERFILES)
+$(KERNEL).ld: $(GLOABL_LINKERFILES)
 
 %.o: %.c $(HEADERFILES)
 	$(ARM_CC) $(ARM_C_FLAGS) -o $@ $<
