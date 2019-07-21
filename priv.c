@@ -1,7 +1,8 @@
 #include "priv.h"
 #include "UART.h"
+#include<stdint.h>
 
-/* Help: https://www.cnblogs.com/shangdawei/archive/2013/04/30/3052597.html */
+extern uint8_t _USER_TEXT_START[];
 
 void switch_to_user() {
     asm volatile ("MOV r0, #0x1");
