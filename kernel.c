@@ -17,17 +17,20 @@ void main() {
         _user_start_p++;
     }
 
-	MPU_setup(); /* Set up the MPU */
-
-    switch_to_user(); /* Switch to User Mode */
+    MPU_setup(); /* Set up the MPU */
+    writeln_str("Finished MPU setup.");
 
     // /* User prog entry point */
     // writeln_str("User Program Entry Point.");
     int *p = (int*)((int)_USER_TEXT_START | 0x1); // Toggle low order bit because Thumb
     int(*userprog)() = (int (*)()) p;
 
+    // int *a = (int*)((int)0x0 | 0x1); // Toggle low order bit because Thumb
+    // int(*as)() = (int (*)()) a;    
+
+    switch_to_user(); /* Switch to User Mode */
     int ret = userprog();
     // writeln_int(ret);
  
-    writeln_str("END OF MAIN REACHED.");
+    // writeln_str("END OF MAIN REACHED.");
 }
