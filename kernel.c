@@ -8,14 +8,7 @@ extern const uint8_t _binary_user_bin_start[];
 extern const uint8_t _binary_user_bin_end[];
 extern uint8_t _USER_TEXT_START[];
 
-void main() {
-    /* Testing MPU and Privileges */
-    // writeln_str("Testing MPU");
-    // test_MPU();
-    // writeln_str("---");
-    // writeln_str("Testing Privileges");
-    // test_privileges();
-    // writeln_str("---");
+void main() {   
 
     /* Copy user text from rodata to user prog */
     uint8_t* _user_start_p = _USER_TEXT_START;
@@ -24,22 +17,17 @@ void main() {
         _user_start_p++;
     }
 
-    // /* Check if copied correctly */
-    // _user_start_p = _USER_TEXT_START;
-    // for (int i = 0; i < _binary_user_bin_end - _binary_user_bin_start; i++) {
-    //     write_int(*(_user_start_p + i));
-    // }
-    // writeln_str("\n");
+	MPU_setup(); /* Set up the MPU */
 
-    /* User prog entry point */
-    writeln_str("User Program Entry Point.");
-    int *p = (int*)((int)_USER_TEXT_START | 0x1);
+    switch_to_user(); /* Switch to User Mode */
+
+    // /* User prog entry point */
+    // writeln_str("User Program Entry Point.");
+    int *p = (int*)((int)_USER_TEXT_START | 0x1); // Toggle low order bit because Thumb
     int(*userprog)() = (int (*)()) p;
 
     int ret = userprog();
-    writeln_int(ret);
+    // writeln_int(ret);
  
-    // switch_to_user();
-
     writeln_str("END OF MAIN REACHED.");
 }

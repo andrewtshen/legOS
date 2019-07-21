@@ -1,4 +1,4 @@
-MAKEFLAGS += -r
+mMAKEFLAGS += -r
 MAKEFLAGS += -R
 
 ARM_CC=arm-none-eabi-gcc

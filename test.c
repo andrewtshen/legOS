@@ -2,6 +2,11 @@
 #include "UART.h"
 #include "priv.h"
 #include "MPU.h"
+#include <stdint.h>
+
+extern const uint8_t _binary_user_bin_start[];
+extern const uint8_t _binary_user_bin_end[];
+extern uint8_t _USER_TEXT_START[];
 
 volatile unsigned int * const CPUID = (unsigned int *)0xE000ED00;
 
@@ -39,4 +44,14 @@ void test_MPU() {
     *noaccess = 3;
     write_str("No access: ");
     writeln_int(*noaccess);
+}
+
+void test_user_prog() {
+    /* Check if copied correctly */
+    uint8_t* _user_start_p = _USER_TEXT_START;
+    for (int i = 0; i < _binary_user_bin_end - _binary_user_bin_start; i++) {
+        write_int(*(_user_start_p + i));
+    }
+    writeln_str("\n");
+    
 }
