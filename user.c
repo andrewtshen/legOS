@@ -2,5 +2,7 @@
 #include "utility.h"
 
 int main() {
-    return sum(2, 3);
+    int a = 5;
+    int b = 6;
+    return sum(a, b);
 }

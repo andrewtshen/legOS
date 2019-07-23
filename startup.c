@@ -97,12 +97,20 @@ void Default_Handler(void) {
 }
  
 void SVC_Handler(void) {
-    /* Testing that SVCall puts us in Kernel Mode */
-    unsigned int * cpuid = (unsigned int *)0xE000ED00;
-    int val = *cpuid;
-    write_str("Value: ");
-    writeln_str("Reading CPUID in Kernel Mode (with SVC)");
-    writeln_int(*cpuid);
+    // /* Testing that SVCall puts us in Kernel Mode */
+    // unsigned int * cpuid = (unsigned int *)0xE000ED00;
+    // int val = *cpuid;
+    // write_str("Value: ");
+    // writeln_str("Reading CPUID in Kernel Mode (with SVC)");
+    // writeln_int(*cpuid);
+    // 
+    // Use SVC to put us in user mode
+    asm volatile ("MOV r0, #0x1");
+    asm volatile ("MSR PSP, r0");
+    /*asm volatile ("MRS R0, PSP"); */ // Test if we are in PSP mode. 
+    asm volatile ("MOV r0, #0x1");
+    asm volatile ("MSR CONTROL, r0");
+    asm volatile ("ISB");
 }
 
 void Reset_Handler(void) {

@@ -20,15 +20,18 @@ void MPU_setup() {
 
     MPU->CTRL = 0;          // Disable CTRL register
                             // ---
-                            // Disable Flash
-    MPU->RNR = 0;           // Select region 0
+    MPU->RNR = 1;           // Select region 0
     MPU->RBAR = 0x00000000; // Base Address = 0x00000000
     MPU->RASR = 0x01000037; // Privileged only, TEX=0,S=0,C=0,B=0, 512MB, Enable=1
+                            // Disable Flash
+    MPU->RNR = 1;           // Select region 0
+    MPU->RBAR = 0x00000000; // Base Address = 0x00000000
+    MPU->RASR = 0x03000011; // Privileged only, TEX=0,S=0,C=0,B=0, 512MB, Enable=1
                             // ---
                             // Enable ALL RAM
-    MPU->RNR = 1;           // Select region 1
+    MPU->RNR = 2;           // Select region 1
     MPU->RBAR = 0x20000000; // Base Address = 0x20000000
-    MPU->RASR = 0x03000037; // Privileged only, TEX=0,S=0,C=0,B=0, 512KB, Enable=1
+    MPU->RASR = 0x03000037; // All Access, TEX=0,S=0,C=0,B=0, 512KB, Enable=1
                             // ---
     //                         // Enable User Prog
     // MPU->RNR = 2;           // Select region 2
