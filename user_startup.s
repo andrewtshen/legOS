@@ -3,4 +3,6 @@
 .section .init_text,"ax",%progbits
 .global _start 
 _start:
-    b main
+    BLX main
+spin:
+    B spin

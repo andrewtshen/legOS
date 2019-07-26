@@ -11,11 +11,11 @@ HEADERFILES := $(wildcard *.h)
 KERN_OBJFILES := \
 	kernel.o \
 	MPU.o \
-	priv.o \
 	startup.o \
 	test.o \
 	UART.o \
 	user.bin.o \
+	launch.o \
 
 USER_OBJFILES := \
 	user.o \

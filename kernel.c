@@ -1,12 +1,18 @@
 #include "UART.h"
-#include "priv.h"
 #include "test.h"
 #include "MPU.h"
+#include "launch.h"
 #include <stdint.h>
 
 extern const uint8_t _binary_user_bin_start[];
 extern const uint8_t _binary_user_bin_end[];
 extern uint8_t _USER_TEXT_START[];
+
+int sum() {
+    int a = 5;
+    int b = 6;
+    return a+b;
+}
 
 void main() {   
 
@@ -16,22 +22,27 @@ void main() {
         *(_user_start_p) = *i;
         _user_start_p++;
     }
-
-    writeln_str("Finished User Prog Setup");
     
     /* Load the pointer to the user program start */
     int *p = (int*)((int)_USER_TEXT_START | 0x1);
+    int(*userprog)() = (int (*)()) p;
 
-    /* Set up the MPU */
+    writeln_str("Launch: ");
+    writeln_int((int)&launch);
+
+    // /* Set up the MPU */
     MPU_setup();
 
-    /* Switch to user mode */
-    switch_to_user();
-    // asm volatile("svc 0"); // note: svc was changed to try to set up user
-    // writeln_str("User Program Entry Point.");
+    /* Switch to user mode and change the stack pointer */
+    launch();
     
-    // int(*userprog)() = (int (*)()) p;
+    // asm volatile("svc 0");
+    // writeln_str("Finished Switch User Setup");
+
+    // int ret = sum();
+    // writeln_int(ret);
 
     // int ret = userprog();
     // writeln_int(ret);
+    writeln_str("END OF KERNEL REACHED");
 }

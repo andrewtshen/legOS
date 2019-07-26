@@ -2,6 +2,9 @@
  * https://jacobmossberg.se/posts/2018/08/11/run-c-program-bare-metal-on-arm-cortex-m3.html 
  * https://embeddedfreak.wordpress.com/2009/08/07/cortex-m3-interrupt-vector-table/
  * */
+#define SVC_00 0x00
+#define SVC_01 0x01
+
 
 #include "UART.h"
 extern unsigned int _STACK_TOP;
@@ -48,16 +51,6 @@ void* vectortable[] = {
     SysTick_Handler,    // The SysTick handler
 };
 
-void Default_Handler(void);
-// #pragma weak NMI_Handler        = Default_Handler /* NMI handler */
-// #pragma weak HardFault_Handler  = Default_Handler /* Hard Fault handler */
-// #pragma weak MemManage_Handler  = Default_Handler /* MPU Fault Handler */
-// #pragma weak BusFault_Handler   = Default_Handler /* Bus Fault Handler */
-// #pragma weak UsageFault_Handler = Default_Handler /* Usage Fault Handler */
-// #pragma weak DebugMon_Handler   = Default_Handler /* Debug Monitor Handler */
-// #pragma weak PendSV_Handler     = Default_Handler /* PendSV Handler */
-// #pragma weak SysTick_Handler    = Default_Handler /* SysTick Handler */
-
 void NMI_Handler(void) {
     writeln_str("In NMI_Handler!");
     while(1);
@@ -91,34 +84,46 @@ void SysTick_Handler(void) {
     while(1);
 }
 
-void Default_Handler(void) {
-    writeln_str("In Default_Handler!");
-    while (1);
+// void __svc(SVC_00) svc_zero(const char *string);
+// void __svc(SVC_01) svc_one(const char *string);
+
+// int call_system_func(void) {
+//     svc_zero("String to pass to SVC handler zero");
+//     svc_one("String to pass to a different OS function");
+// }
+//  
+void SVCHandler_main(unsigned int * svc_args) {
+    writeln_str("Herea!");
+    unsigned int svc_number;    /*    * Stack contains:    * r0, r1, r2, r3, r12, r14, the return address and xPSR    * First argument (r0) is svc_args[0]    */    
+    svc_number = ((char *)svc_args[6])[-2];    
+    switch(svc_number) {
+        case SVC_00:            /* Handle SVC 00 */            
+            break;
+        case SVC_01:            /* Handle SVC 01 */            
+            break;        
+        default:                /* Unknown SVC */
+            break;    
+    }
 }
- 
+
 void SVC_Handler(void) {
-    // /* Testing that SVCall puts us in Kernel Mode */
-    // unsigned int * cpuid = (unsigned int *)0xE000ED00;
-    // int val = *cpuid;
-    // write_str("Value: ");
-    // writeln_str("Reading CPUID in Kernel Mode (with SVC)");
-    // writeln_int(*cpuid);
-    // 
-    // Use SVC to put us in user mode
-    asm volatile ("MOV r0, #0x1");
-    asm volatile ("MSR PSP, r0");
-    /*asm volatile ("MRS R0, PSP"); */ // Test if we are in PSP mode. 
-    asm volatile ("MOV r0, #0x1");
-    asm volatile ("MSR CONTROL, r0");
-    asm volatile ("ISB");
+    asm volatile (
+        // "IMPORT SVCHandler_main\n\t"
+        "TST LR, #4\n\t"
+        "ITE EQ\n\t"
+        "MRSEQ R0, MSP\n\t"
+        "MRSNE R0, PSP\n\t"
+        "B SVCHandler_main\n\t"
+    );
+    // SVCHandler_main();
 }
 
 void Reset_Handler(void) {
-    // On reset, call startup and main
+    /* On reset, call startup and main */
     startup();
     main();
 
-    // If main() ever exit, this should hold MCU from running wild
+    /* If main() ever exit, this should hold MCU from running wild */
     while(1);
 }
 
@@ -147,9 +152,4 @@ void startup()
         data_ram_start_p++;
         data_rom_start_p++;
     }
-
-    /* Now we are ready to start the main function */
-    /*main();*/
-
-    /*while(1) {};*/
 }
