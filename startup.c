@@ -93,20 +93,34 @@ void SysTick_Handler(void) {
 // }
 //  
 void SVCHandler_main(unsigned int * svc_args) {
-    writeln_str("Herea!");
+    writeln_str("---\nExecuting SVCall.");
     unsigned int svc_number;    /*    * Stack contains:    * r0, r1, r2, r3, r12, r14, the return address and xPSR    * First argument (r0) is svc_args[0]    */    
-    svc_number = ((char *)svc_args[6])[-2];    
+    svc_number = ((char *)svc_args[6])[-2];
+
     switch(svc_number) {
-        case SVC_00:            /* Handle SVC 00 */            
+        case SVC_00: ;          /* Handle SVC 00: Add from r0 and r1, display output */ 
+            int num0 = svc_args[0];
+            write_str("Number Input: ");
+            writeln_int(num0);
+
+            int num1 = svc_args[1];
+            write_str("Number Input: ");
+            writeln_int(num1);
+
+            int sum = num0+num1;
+            write_str("Sum: ");
+            writeln_hex(sum);
             break;
-        case SVC_01:            /* Handle SVC 01 */            
+        case SVC_01: ;          /* Handle SVC 01 */            
             break;        
-        default:                /* Unknown SVC */
+        default:     ;          /* Unknown SVC */
             break;    
     }
 }
 
 void SVC_Handler(void) {
+    asm volatile ("MOV R0, 100");
+
     asm volatile (
         // "IMPORT SVCHandler_main\n\t"
         "TST LR, #4\n\t"

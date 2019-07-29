@@ -20,7 +20,7 @@ KERN_OBJFILES := \
 USER_OBJFILES := \
 	user.o \
 	user_startup.o \
-	sum.o \
+	sum.o
 
 GLOABL_LINKERFILES := \
 	mem.ld
@@ -66,8 +66,8 @@ clean:
 qemu: $(KERNEL).bin
 	$(ARM_QEMU) $(QEMU_FLAGS) -kernel $<
 
-.PHONY: qemu-gdb
-qemu-gdb: $(KERNEL).bin 
+.PHONY: qemugdb
+qemugdb: $(KERNEL).bin 
 	$(ARM_QEMU) $(QEMU_FLAGS) -S -s -kernel $<
 
 .PHONY: gdb

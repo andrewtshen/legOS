@@ -2,6 +2,5 @@
 #define LAUNCH_H
 
 void launch();
-void trampoline();
 
 #endif

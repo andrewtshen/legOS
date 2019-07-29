@@ -2,7 +2,11 @@
 #include "utility.h"
 
 int main() {
-    int a = 5;
-    int b = 6;
-    return sum(a, b);
+    // char[] a = "hello";
+    asm volatile ("MOV R0, 256");
+    asm volatile ("MOV R1, 15");
+    asm volatile ("svc 0");
+    // int a = 5;
+    // int b = 6;
+    // return sum(a, b);
 }

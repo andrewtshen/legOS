@@ -2,7 +2,7 @@ INCLUDE "mem.ld"
 
 SECTIONS
 {
-    . = 0x20005000;         /* 0x20004000 - 0x20005=00 is the stack */
+    . = 0x20005000;         /* 0x20004000 - 0x20005000 is the stack */
     _USER_STACK_TOP = .;
     
     .text : 
