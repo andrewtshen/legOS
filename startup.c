@@ -93,7 +93,7 @@ void SysTick_Handler(void) {
 // }
 //  
 void SVCHandler_main(unsigned int * svc_args) {
-    writeln_str("---\nExecuting SVCall.");
+    // writeln_str("---\nExecuting SVCall.");
     unsigned int svc_number;    /*    * Stack contains:    * r0, r1, r2, r3, r12, r14, the return address and xPSR    * First argument (r0) is svc_args[0]    */    
     svc_number = ((char *)svc_args[6])[-2];
 

@@ -1,6 +1,7 @@
 .syntax unified
 
 .global launch
+.align 6
 launch:
     LDR r0, =#0x20005000        // User stack location
     MSR PSP, r0                 // Set PSP to 0x20005000.
@@ -9,4 +10,6 @@ launch:
     ISB                         // ISB to flush pipeline.
     LDR r0, =#0x20005001        // User prog entry point
     BX r0                       // Branch to the user prog entry point.
-    .fill 0x2, 0x2, 0x0         // Fill launch to be 32 bytes long.
+    NOP
+    NOP
+    NOP
