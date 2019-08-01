@@ -6,7 +6,7 @@ void foo() {
 }
 
 int main() {
-    // char[] a = "hello";
+    // char* a = "hello";
     asm volatile ("MOV R0, 256");
     asm volatile ("MOV R1, 15");
     asm volatile ("svc 0");

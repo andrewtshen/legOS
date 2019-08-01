@@ -20,7 +20,7 @@ void main() {
     // int *p = (int*)((int)_USER_TEXT_START | 0x1);
     // int(*userprog)() = (int (*)()) p;
 
-    writeln_str("Launch start: ");
+    // writeln_str("Launch start: ");
     writeln_hex((int)&launch);
 
     // /* Set up the MPU */
@@ -30,5 +30,5 @@ void main() {
     launch();
     
     // asm volatile("svc 0");
-    writeln_str("END OF KERNEL REACHED");
+    // writeln_str("END OF KERNEL REACHED");
 }
