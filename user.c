@@ -1,17 +1,20 @@
 #include "user.h"
 #include "utility.h"
-
-void foo() {
-    asm volatile("nop");
-}
+#include "printf.h"
 
 int main() {
+    // cprintf("hello!");
+    svcprint('c');
+    svcprint('d');
+    // asm volatile ("MOV R0, 'c'");
+    // char c = 'c';
+    // asm volatile ("MOV R0, %0": : "r" (c));
+    // asm volatile ("svc 0");
+    // asm volatile ("MOV R0, 'd'");
+    // asm volatile ("svc 0");
+
     // char* a = "hello";
-    asm volatile ("MOV R0, 256");
-    asm volatile ("MOV R1, 15");
-    asm volatile ("svc 0");
-    foo();
-    // int a = 5;
-    // int b = 6;
-    // return sum(a, b);
+    // asm volatile ("MOV R0, 256");
+    // asm volatile ("MOV R1, 15");
+    // asm volatile ("svc 0");
 }

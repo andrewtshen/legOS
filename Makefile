@@ -16,16 +16,18 @@ KERN_OBJFILES := \
 	UART.o \
 	user.bin.o \
 	launch.o \
+	printf.o \
 
 USER_OBJFILES := \
 	user.o \
 	user_startup.o \
-	sum.o
+	sum.o \
+	printf.o \
 
 GLOABL_LINKERFILES := \
 	mem.ld
 
-ARM_C_FLAGS=-O0 -c -g -mcpu=cortex-m3 -mthumb
+ARM_C_FLAGS=-O0 -c -g -mcpu=cortex-m3 -mthumb -nostdlib -Wall -Wextra
 QEMU_FLAGS=-M lm3s6965evb -m 128M -nographic -serial mon:stdio
 
 KERNEL=kernel

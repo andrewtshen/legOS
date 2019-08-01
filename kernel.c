@@ -21,7 +21,7 @@ void main() {
     // int(*userprog)() = (int (*)()) p;
 
     // writeln_str("Launch start: ");
-    writeln_hex((int)&launch);
+    // writeln_hex((int)&launch);
 
     // /* Set up the MPU */
     MPU_setup();

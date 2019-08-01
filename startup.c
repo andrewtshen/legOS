@@ -52,46 +52,38 @@ void* vectortable[] = {
 };
 
 void NMI_Handler(void) {
-    writeln_str("In NMI_Handler!");
+    // writeln_str("In NMI_Handler!");
     while(1);
 }
 void HardFault_Handler(void) {
-    writeln_str("In HardFault_Handler!");
+    // writeln_str("In HardFault_Handler!");
     while(1);
 }
 void MemManage_Handler(void) {
-    writeln_str("In MemManage_Handler!");
+    // writeln_str("In MemManage_Handler!");
     while(1);
 }
 void BusFault_Handler(void) {
-    writeln_str("In BusFault_Handler!");
+    // writeln_str("In BusFault_Handler!");
     while(1);
 }
 void UsageFault_Handler(void) {
-    writeln_str("In UsageFault_Handler!");
+    // writeln_str("In UsageFault_Handler!");
     while(1);
 }
 void DebugMon_Handler(void) {
-    writeln_str("In DebugMon_Handler!");
+    // writeln_str("In DebugMon_Handler!");
     while(1);
 }
 void PendSV_Handler(void) {
-    writeln_str("In PendSV_Handler!");
+    // writeln_str("In PendSV_Handler!");
     while(1);
 }
 void SysTick_Handler(void) {
-    writeln_str("In SysTick_Handler!");
+    // writeln_str("In SysTick_Handler!");
     while(1);
 }
 
-// void __svc(SVC_00) svc_zero(const char *string);
-// void __svc(SVC_01) svc_one(const char *string);
-
-// int call_system_func(void) {
-//     svc_zero("String to pass to SVC handler zero");
-//     svc_one("String to pass to a different OS function");
-// }
-//  
 void SVCHandler_main(unsigned int * svc_args) {
     // writeln_str("---\nExecuting SVCall.");
     unsigned int svc_number;    /*    * Stack contains:    * r0, r1, r2, r3, r12, r14, the return address and xPSR    * First argument (r0) is svc_args[0]    */    
@@ -99,20 +91,21 @@ void SVCHandler_main(unsigned int * svc_args) {
 
     switch(svc_number) {
         case SVC_00: ;          /* Handle SVC 00: Add from r0 and r1, display output */ 
-            int num0 = svc_args[0];
-            write_str("Number Input: ");
-            writeln_int(num0);
-
-            int num1 = svc_args[1];
-            write_str("Number Input: ");
-            writeln_int(num1);
-
-            int sum = num0+num1;
-            write_str("Sum: ");
-            writeln_hex(sum);
+            char c = svc_args[0];
+            write(c);
             break;
         case SVC_01: ;          /* Handle SVC 01 */            
-            break;        
+            int num0 = svc_args[0];
+            // write_str("Number Input: ");
+            // writeln_int(num0);
+
+            int num1 = svc_args[1];
+            // write_str("Number Input: ");
+            // writeln_int(num1);
+
+            int sum = num0+num1;
+            // writeln_hex(sum);
+            break;
         default:     ;          /* Unknown SVC */
             break;    
     }
