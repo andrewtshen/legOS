@@ -1,4 +1,4 @@
-mMAKEFLAGS += -r
+MAKEFLAGS += -r
 MAKEFLAGS += -R
 
 ARM_CC=arm-none-eabi-gcc
@@ -17,6 +17,7 @@ KERN_OBJFILES := \
 	user.bin.o \
 	launch.o \
 	printf.o \
+	SVC_Handler.o \
 
 USER_OBJFILES := \
 	user.o \
@@ -27,7 +28,7 @@ USER_OBJFILES := \
 GLOABL_LINKERFILES := \
 	mem.ld
 
-ARM_C_FLAGS=-O0 -c -g -mcpu=cortex-m3 -mthumb -nostdlib -Wall -Wextra
+ARM_C_FLAGS=-O0 -c -g -mcpu=cortex-m3 -mthumb -nostdlib -Wall -Wextra -fno-builtin
 QEMU_FLAGS=-M lm3s6965evb -m 128M -nographic -serial mon:stdio
 
 KERNEL=kernel

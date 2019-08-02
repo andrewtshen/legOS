@@ -19,16 +19,16 @@ void startup();
 void main();
 
 /* Declare our handlers */
-void __attribute__((weak)) Reset_Handler(void);     /* Reset Handler */
-void __attribute__((weak)) NMI_Handler(void);       /* NMI Handler */
-void __attribute__((weak)) HardFault_Handler(void); /* Hard Fault Handler */
-void __attribute__((weak)) MemManage_Handler(void); /* MPU Fault Handler */
-void __attribute__((weak)) BusFault_Handler(void);  /* Bus Fault Handler */
-void __attribute__((weak)) UsageFault_Handler(void);/* Usage Fault Handler */
-void __attribute__((weak)) SVC_Handler(void);       /* SVCall Handler */
-void __attribute__((weak)) DebugMon_Handler(void);  /* Debug Monitor Handler */
-void __attribute__((weak)) PendSV_Handler(void);    /* PendSV Handler */
-void __attribute__((weak)) SysTick_Handler(void);   /* SysTick Handler */
+void Reset_Handler(void);     /* Reset Handler */
+void NMI_Handler(void);       /* NMI Handler */
+void HardFault_Handler(void); /* Hard Fault Handler */
+void MemManage_Handler(void); /* MPU Fault Handler */
+void BusFault_Handler(void);  /* Bus Fault Handler */
+void UsageFault_Handler(void);/* Usage Fault Handler */
+void SVC_Handler(void);       /* SVCall Handler */
+void DebugMon_Handler(void);  /* Debug Monitor Handler */
+void PendSV_Handler(void);    /* PendSV Handler */
+void SysTick_Handler(void);   /* SysTick Handler */
 
 /* Define the vector table */
 __attribute__ ((section("vectors")))
@@ -52,40 +52,38 @@ void* vectortable[] = {
 };
 
 void NMI_Handler(void) {
-    // writeln_str("In NMI_Handler!");
+    UART_writeln_str("In NMI_Handler!");
     while(1);
 }
 void HardFault_Handler(void) {
-    // writeln_str("In HardFault_Handler!");
+    UART_writeln_str("In HardFault_Handler!");
     while(1);
 }
 void MemManage_Handler(void) {
-    // writeln_str("In MemManage_Handler!");
+    UART_writeln_str("In MemManage_Handler!");
     while(1);
 }
 void BusFault_Handler(void) {
-    // writeln_str("In BusFault_Handler!");
-    while(1);
+    UART_writeln_str("In BusFault_Handler!");
+        while(1);
 }
 void UsageFault_Handler(void) {
-    // writeln_str("In UsageFault_Handler!");
+    UART_writeln_str("In UsageFault_Handler!");
     while(1);
 }
 void DebugMon_Handler(void) {
-    // writeln_str("In DebugMon_Handler!");
+    UART_writeln_str("In DebugMon_Handler!");
     while(1);
 }
 void PendSV_Handler(void) {
-    // writeln_str("In PendSV_Handler!");
+    UART_writeln_str("In PendSV_Handler!");
     while(1);
 }
 void SysTick_Handler(void) {
-    // writeln_str("In SysTick_Handler!");
-    while(1);
+    UART_writeln_str("In SysTick_Handler!");
+        while(1);
 }
-
 void SVCHandler_main(unsigned int * svc_args) {
-    // writeln_str("---\nExecuting SVCall.");
     unsigned int svc_number;    /*    * Stack contains:    * r0, r1, r2, r3, r12, r14, the return address and xPSR    * First argument (r0) is svc_args[0]    */    
     svc_number = ((char *)svc_args[6])[-2];
 
@@ -94,37 +92,12 @@ void SVCHandler_main(unsigned int * svc_args) {
             char c = svc_args[0];
             write(c);
             break;
-        case SVC_01: ;          /* Handle SVC 01 */            
-            int num0 = svc_args[0];
-            // write_str("Number Input: ");
-            // writeln_int(num0);
-
-            int num1 = svc_args[1];
-            // write_str("Number Input: ");
-            // writeln_int(num1);
-
-            int sum = num0+num1;
-            // writeln_hex(sum);
+        case SVC_01: ;          /* Handle SVC 01 */
             break;
         default:     ;          /* Unknown SVC */
             break;    
     }
 }
-
-void SVC_Handler(void) {
-    asm volatile ("MOV R0, 100");
-
-    asm volatile (
-        // "IMPORT SVCHandler_main\n\t"
-        "TST LR, #4\n\t"
-        "ITE EQ\n\t"
-        "MRSEQ R0, MSP\n\t"
-        "MRSNE R0, PSP\n\t"
-        "B SVCHandler_main\n\t"
-    );
-    // SVCHandler_main();
-}
-
 void Reset_Handler(void) {
     /* On reset, call startup and main */
     startup();
@@ -134,8 +107,7 @@ void Reset_Handler(void) {
     while(1);
 }
 
-void startup()
-{
+void startup() {
     /* Set memory in bss segment to zeros */
     unsigned int * bss_start_p = &_BSS_START; 
     unsigned int * bss_end_p = &_BSS_END;

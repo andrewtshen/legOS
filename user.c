@@ -3,9 +3,10 @@
 #include "printf.h"
 
 int main() {
-    // cprintf("hello!");
-    svcprint('c');
-    svcprint('d');
+    char * h = "hello";
+    printf("%s %s", h, "world!");
+    // svcprint('c');
+    // svcprint('d');
     // asm volatile ("MOV R0, 'c'");
     // char c = 'c';
     // asm volatile ("MOV R0, %0": : "r" (c));
