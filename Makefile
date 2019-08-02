@@ -18,12 +18,15 @@ KERN_OBJFILES := \
 	launch.o \
 	printf.o \
 	SVC_Handler.o \
+	string.o \
 
 USER_OBJFILES := \
 	user.o \
 	user_startup.o \
 	sum.o \
 	printf.o \
+	string.o \
+	UART.o \
 
 GLOABL_LINKERFILES := \
 	mem.ld
