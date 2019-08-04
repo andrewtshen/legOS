@@ -24,7 +24,7 @@ void main() {
     // writeln_hex((int)&launch);
 
     // /* Set up the MPU */
-    // MPU_setup();
+    MPU_setup();
 
     /* Switch to user mode and change the stack pointer */
     launch();

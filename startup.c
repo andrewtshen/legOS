@@ -5,8 +5,10 @@
 #define SVC_00 0x00
 #define SVC_01 0x01
 
-
 #include "UART.h"
+#include "string.h"
+#include "math.h"
+
 extern unsigned int _STACK_TOP;
 
 extern unsigned int _BSS_START;
@@ -88,14 +90,25 @@ void SVCHandler_main(unsigned int * svc_args) {
     svc_number = ((char *)svc_args[6])[-2];
 
     switch(svc_number) {
-        case SVC_00: ;          /* Handle SVC 00: Add from r0 and r1, display output */ 
-            char c = svc_args[0];
-            write(c);
+
+        /* Handle SVC 00: Add from r0 and r1, display output */ 
+        case SVC_00: ;
+            /* Validate that it is from User Prog region */
+            char *c = (char*)svc_args[0];
+            if (hex_to_int("20004000") > (int)c || (int)c+strlen(c) > hex_to_int("20008000")) {
+                UART_writeln_str("ERR: Pointer given to SVC not in User Prog.");
+            }
+            UART_write_str(c);
             break;
-        case SVC_01: ;          /* Handle SVC 01 */
+
+        /* Handle SVC 01 */
+        case SVC_01: ;
             break;
-        default:     ;          /* Unknown SVC */
-            break;    
+
+        /* Unknown SVC */
+        default:     ;
+            break;
+
     }
 }
 void Reset_Handler(void) {
@@ -132,3 +145,4 @@ void startup() {
         data_rom_start_p++;
     }
 }
+    

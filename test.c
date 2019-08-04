@@ -2,7 +2,16 @@
 #include "UART.h"
 #include "MPU.h"
 #include <stdint.h>
+#include <assert.h>
 
-extern const uint8_t _binary_user_bin_start[];
-extern const uint8_t _binary_user_bin_end[];
-extern uint8_t _USER_TEXT_START[];
+#define ASSERT(expr) \
+    if (expr) \
+        printf("%s: PASSED\n", __func__); \
+    else \
+        printf("%s: FAILED\n", __func__);
+
+void KERNEL_test_assert() {
+    // ASSERT(0 == 1);
+    // ASSERT(0 == 0);
+
+}

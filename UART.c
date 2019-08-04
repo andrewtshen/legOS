@@ -1,4 +1,5 @@
 #include "UART.h"
+#include "math.h"
 
 volatile unsigned int * const UART0DR = (unsigned int *)0x4000C000;
 volatile unsigned int * const UART0FR = (unsigned int *)0x4000C018;
@@ -17,26 +18,6 @@ void write(char c) {
     *UART0DR = c;
 }
 
-char UART_int_to_hex(unsigned int s) {
-    /* Conversion to Hex with switch case */
-    switch (s) {
-        case 10:
-            return 'A';
-        case 11:
-            return 'B';
-        case 12:
-            return 'C';
-        case 13:
-            return 'D';
-        case 14:
-            return 'E';
-        case 15:
-            return 'F';
-        default:
-            return s+'0';
-    }
-}
-
 void UART_write_str(const char* s) {
     while (*s != '\0') {
         write(*s);
@@ -44,21 +25,21 @@ void UART_write_str(const char* s) {
     }
 }
 
-void UART_write_int(unsigned int s) {
-    if (s < 10) {
-        write(s + '0');
+void UART_write_int(unsigned int x) {
+    if (x < 10) {
+        write(x + '0');
     } else {
-        UART_write_int(s / 10);
-        UART_write_int(s % 10);
+        UART_write_int(x / 10);
+        UART_write_int(x % 10);
     }
 }
 
-void UART_write_hex(unsigned int s) {
-    if (s < 16) {
-        write(UART_int_to_hex(s));
+void UART_write_hex(unsigned int x) {
+    if (x < 16) {
+        write(digit_to_hex(x));
     } else {
-        UART_write_hex(s / 16);
-        UART_write_hex(s % 16);
+        UART_write_hex(x / 16);
+        UART_write_hex(x % 16);
     }
 }
 
@@ -70,22 +51,22 @@ void UART_writeln_str(const char* s) {
     write('\n');
 }
 
-void UART_writeln_int(unsigned int s) {
-    if (s < 10) {
-        write(s + '0');
+void UART_writeln_int(unsigned int x) {
+    if (x < 10) {
+        write(x + '0');
     } else {
-        UART_write_int(s / 10);
-        UART_write_int(s % 10);
+        UART_write_int(x / 10);
+        UART_write_int(x % 10);
     }
     write('\n');
 }
 
-void UART_writeln_hex(unsigned int s) {
-    if (s < 16) {
-        write(UART_int_to_hex(s));
+void UART_writeln_hex(unsigned int x) {
+    if (x < 16) {
+        write(digit_to_hex(x));
     } else {
-        UART_write_hex(s / 16);
-        UART_write_hex(s % 16);
+        UART_write_hex(x / 16);
+        UART_write_hex(x % 16);
     }
     write('\n');
 }

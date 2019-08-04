@@ -19,6 +19,8 @@ KERN_OBJFILES := \
 	printf.o \
 	SVC_Handler.o \
 	string.o \
+	math.o \
+	test.o \
 
 USER_OBJFILES := \
 	user.o \
@@ -27,6 +29,8 @@ USER_OBJFILES := \
 	printf.o \
 	string.o \
 	UART.o \
+	math.o \
+	test.o \
 
 GLOABL_LINKERFILES := \
 	mem.ld
