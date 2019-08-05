@@ -15,6 +15,7 @@ KERN_OBJFILES := \
 	test.o \
 	UART.o \
 	user.bin.o \
+	user2.bin.o \
 	launch.o \
 	printf.o \
 	SVC_Handler.o \
@@ -34,6 +35,17 @@ USER_OBJFILES := \
 	test.o \
 	scanf.o \
 
+USER2_OBJFILES := \
+	user2.o \
+	user2_startup.o \
+	sum.o \
+	printf.o \
+	string.o \
+	UART.o \
+	math.o \
+	test.o \
+	scanf.o \
+
 GLOABL_LINKERFILES := \
 	mem.ld
 
@@ -42,9 +54,10 @@ QEMU_FLAGS=-M lm3s6965evb -m 128M -nographic -serial mon:stdio
 
 KERNEL=kernel
 USER=user
+USER2=user2
 
 .PHONY: all
-all: $(KERNEL).bin $(USER).elf
+all: $(KERNEL).bin $(USER).elf $(USER2).elf
 
 $(KERNEL).bin: $(KERNEL).elf
 	$(ARM_OBJCOPY) -O binary $< $@
@@ -52,7 +65,13 @@ $(KERNEL).bin: $(KERNEL).elf
 $(USER).bin: $(USER).elf
 	$(ARM_OBJCOPY) -O binary $< $@
 
+$(USER2).bin: $(USER2).elf
+	$(ARM_OBJCOPY) -O binary $< $@
+
 $(USER).bin.o: $(USER).bin
+	$(ARM_OBJCOPY) -I binary -B arm -O elf32-littlearm --rename-section .data=.rodata,contents,alloc,load,readonly,data $< $@ 
+
+$(USER2).bin.o: $(USER2).bin
 	$(ARM_OBJCOPY) -I binary -B arm -O elf32-littlearm --rename-section .data=.rodata,contents,alloc,load,readonly,data $< $@ 
 
 $(KERNEL).elf: $(KERN_OBJFILES)
@@ -61,7 +80,11 @@ $(KERNEL).elf: $(KERN_OBJFILES)
 $(USER).elf: $(USER_OBJFILES)
 	$(ARM_LD) -Tuser.ld -o $@ $^
 
+$(USER2).elf: $(USER2_OBJFILES)
+	$(ARM_LD) -Tuser2.ld -o $@ $^
+
 $(USER).ld: $(GLOABL_LINKERFILES)
+$(USER2).ld: $(GLOABL_LINKERFILES)
 $(KERNEL).ld: $(GLOABL_LINKERFILES)
 
 %.o: %.c $(HEADERFILES)

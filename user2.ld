@@ -4,7 +4,9 @@ SECTIONS
 {
     . = 0x20005000;         /* 0x20004000 - 0x20005000 is the stack */
     _USER_STACK_TOP = .;
-                            /* This program will use 0x20005000 - 0x20006000 */
+
+    . = 0x20006000;         /* This program will use 0x20006000 - 0x20007000 */
+    
     .text : 
     {   
         KEEP(*(.init_text)) /* ASM to main function */

@@ -54,35 +54,35 @@ void* vectortable[] = {
 };
 
 void NMI_Handler(void) {
-    UART_writeln_str("In NMI_Handler!");
+    UART_printf("In NMI_Handler!\n");
     while(1);
 }
 void HardFault_Handler(void) {
-    UART_writeln_str("In HardFault_Handler!");
+    UART_printf("In HardFault_Handler!\n");
     while(1);
 }
 void MemManage_Handler(void) {
-    UART_writeln_str("In MemManage_Handler!");
+    UART_printf("In MemManage_Handler!\n");
     while(1);
 }
 void BusFault_Handler(void) {
-    UART_writeln_str("In BusFault_Handler!");
+    UART_printf("In BusFault_Handler!\n");
         while(1);
 }
 void UsageFault_Handler(void) {
-    UART_writeln_str("In UsageFault_Handler!");
+    UART_printf("In UsageFault_Handler!\n");
     while(1);
 }
 void DebugMon_Handler(void) {
-    UART_writeln_str("In DebugMon_Handler!");
+    UART_printf("In DebugMon_Handler!\n");
     while(1);
 }
 void PendSV_Handler(void) {
-    UART_writeln_str("In PendSV_Handler!");
+    UART_printf("In PendSV_Handler!\n");
     while(1);
 }
 void SysTick_Handler(void) {
-    UART_writeln_str("In SysTick_Handler!");
+    UART_printf("In SysTick_Handler!\n");
         while(1);
 }
 void SVCHandler_main(unsigned int * svc_args) {
@@ -97,7 +97,7 @@ void SVCHandler_main(unsigned int * svc_args) {
             char *s = (char*)svc_args[0];
             int size = svc_args[1];
             if (hex_to_int("20004000") > (int)s || (int)s+size > hex_to_int("20008000")) {
-                UART_writeln_str("ERR: Pointer given to SVC not in User Prog.");
+                UART_printf("ERR: Pointer given to SVC not in User Prog.\n");
                 break;
             }
             UART_write_buf(s, size);
@@ -147,4 +147,3 @@ void startup() {
         *data_ram_start_p++ = *data_rom_start_p++;
     }
 }
-    
