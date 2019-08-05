@@ -21,6 +21,7 @@ KERN_OBJFILES := \
 	string.o \
 	math.o \
 	test.o \
+	scanf.o \
 
 USER_OBJFILES := \
 	user.o \
@@ -31,6 +32,7 @@ USER_OBJFILES := \
 	UART.o \
 	math.o \
 	test.o \
+	scanf.o \
 
 GLOABL_LINKERFILES := \
 	mem.ld

@@ -94,21 +94,25 @@ void SVCHandler_main(unsigned int * svc_args) {
         /* Handle SVC 00: Add from r0 and r1, display output */ 
         case SVC_00: ;
             /* Validate that it is from User Prog region */
-            char *c = (char*)svc_args[0];
-            if (hex_to_int("20004000") > (int)c || (int)c+strlen(c) > hex_to_int("20008000")) {
+            char *s = (char*)svc_args[0];
+            int size = svc_args[1];
+            if (hex_to_int("20004000") > (int)s || (int)s+size > hex_to_int("20008000")) {
                 UART_writeln_str("ERR: Pointer given to SVC not in User Prog.");
+                break;
             }
-            UART_write_str(c);
+            UART_write_buf(s, size);
             break;
 
-        /* Handle SVC 01 */
+        /* Handle SVC 01: Read in a character */
         case SVC_01: ;
+            /* TODO; Validate char *c */
+            char *c = (char*)svc_args[0];
+            *c = read();
             break;
 
         /* Unknown SVC */
         default:     ;
             break;
-
     }
 }
 void Reset_Handler(void) {
@@ -140,9 +144,7 @@ void startup() {
 
     while(data_ram_start_p != data_ram_end_p)
     {
-        *data_ram_start_p = *data_rom_start_p;
-        data_ram_start_p++;
-        data_rom_start_p++;
+        *data_ram_start_p++ = *data_rom_start_p++;
     }
 }
     

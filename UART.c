@@ -18,6 +18,13 @@ void write(char c) {
     *UART0DR = c;
 }
 
+void UART_write_buf(const char* s, int size) {
+    for (int i = 0; i < size; i++) {
+        write(*s);
+        s++;
+    }
+}
+
 void UART_write_str(const char* s) {
     while (*s != '\0') {
         write(*s);

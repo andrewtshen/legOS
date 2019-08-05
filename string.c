@@ -1,4 +1,5 @@
 #include "string.h"
+#include "printf.h"
 
 /* Return string length */
 int strlen(const char *s) {
@@ -46,11 +47,20 @@ char* strncpy(char* dest, const char* src, int num, int size) {
     /* Copy over string */
     char* ptr = dest;
     while (*src && num--) {
-        *dest = *src;
-        dest++;
-        src++;
+        *dest++ = *src++;
     }
     *dest = '\0';
 
     return ptr;
+}
+
+/* Boolean string equals, returns 0 if true, 1 if false */
+int strcmp(const char *s1, const char *s2) {
+    while((*s1!='\0') || (*s2!='\0')) {
+        if(*s1 > *s2) return 0;
+        if(*s1 < *s2) return 0;
+        s1++;
+        s2++;
+    }
+    return 1;
 }

@@ -3,7 +3,7 @@
 
 char digit_to_hex(int x);
 
-int hex_to_decimal(char c);
+int hex_to_digit(char c);
 
 int hex_to_int(char* s);
 

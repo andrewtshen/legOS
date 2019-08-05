@@ -5,13 +5,15 @@
 #include "UART.h"
 #include "math.h"
 #include "test.h"
+#include "scanf.h"
 
 int main() {
-    int a = 15;
-    printf("this is a: %d\n", a);
-    printf("this is a: %x\n", a);
-    printf("this is %d\n", 8);
 
-    KERNEL_test_assert();
+    printf("What is your name?: ");
+    char name[20];
+    read_str(name, 20);
 
+    printf("Your name is %s\n", name);
+
+    // USER_tests();
 }

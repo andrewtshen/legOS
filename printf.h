@@ -1,9 +1,9 @@
 #ifndef PRINTF_H
 #define PRINTF_H
 
-void svcprint(char *c);
+void svc_print(char *c, int size);
 void printf(char *fmt, ...);
-void write_int(unsigned int s, char *f);
-void write_hex(unsigned int s, char *f);
+void add_int(unsigned int s, char *f);
+void add_hex(unsigned int s, char *f);
 
 #endif
