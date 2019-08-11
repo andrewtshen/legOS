@@ -81,7 +81,7 @@ $(USER).elf: $(USER_OBJFILES)
 	$(ARM_LD) -Tuser.ld -o $@ $^
 
 $(USER2).elf: $(USER2_OBJFILES)
-	$(ARM_LD) -Tuser2.ld -o $@ $^
+	$(ARM_LD) -Tuser.ld -o $@ $^
 
 $(USER).ld: $(GLOABL_LINKERFILES)
 $(USER2).ld: $(GLOABL_LINKERFILES)

@@ -20,8 +20,7 @@ void load_userprog(uint8_t* _user_start_p, const uint8_t* bin_start, const uint8
 
 void main() {   
     /* Copy user text from rodata to user prog */
-    load_userprog(_USER_TEXT_START, _binary_user_bin_start, _binary_user_bin_end);
-    load_userprog(_USER2_TEXT_START, _binary_user2_bin_start, _binary_user2_bin_end);
+    
     
     /* Load the pointer to the user program start */
     // int *p = (int*)((int)_USER_TEXT_START | 0x1);
@@ -41,10 +40,13 @@ void main() {
     UART_printf("Your choice: ");
     unsigned int choice;
     UART_read_int(&choice);
+
     if (choice == 1) {
+        load_userprog(_USER_TEXT_START, _binary_user_bin_start, _binary_user_bin_end);
         launch();    
     } else if (choice == 2) {
-        launch2();
+        load_userprog(_USER2_TEXT_START, _binary_user2_bin_start, _binary_user2_bin_end);
+        launch();
     }
     
 }
