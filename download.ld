@@ -2,30 +2,26 @@ INCLUDE "mem.ld"
 
 SECTIONS
 {
-    . = 0x20005000;         /* 0x20004000 - 0x20005000 is the stack */
-    _USER_STACK_TOP = .;
-
-    . = 0x20006000;         /* This program will use 0x20006000 - 0x20007000 */
-    
+    . = 0x2000A000;         /* Start of Download Prog */
     .text : 
     {   
         KEEP(*(.init_text)) /* ASM to main function */
         *(.text)            /* Text data */
     }
 
-    _USER_ROM_START = .;
+    _DOWNLOAD_ROM_START = .;
     .rodata :
     {
         *(.rodata)          /* Read only data */
     }
     
-    _USER_DATA_START = .;
+    _DOWNLOAD_DATA_START = .;
     .data : 
     {
         *(.data)            /* Data */
     }
     
-    _USER_BSS_START = .;
+    _DOWNLOAD_BSS_START = .;
     .bss : 
     {
         *(.bss)             /* Zero-initialied data */

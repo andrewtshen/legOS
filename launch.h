@@ -2,6 +2,6 @@
 #define LAUNCH_H
 
 void launch();
-void launch2();
+void launch_download();
 
 #endif

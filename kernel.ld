@@ -32,4 +32,9 @@ SECTIONS
         *(.bss)       /* Zero-filled run time allocate data memory */
     }
     _BSS_END = .;     /* Indicates where BSS section ends in RAM */
+
+    . = 0x2000A000;
+    _DOWNLOAD_START = .;
+    . += 0x3000;     /* Reserve space for our download program */
+    _DOWNLOAD_END = .;
 }
