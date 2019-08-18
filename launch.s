@@ -12,20 +12,5 @@ launch:
     ISB                         // ISB to flush pipeline.
     LDR r0, =#0x20005001        // User prog entry point
     BX r0                       // Branch to the user prog entry point.
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
+    .SPACE 32
     NOP

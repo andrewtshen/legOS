@@ -128,7 +128,7 @@ clean:
 
 .PHONY: qemu
 qemu: $(KERNEL).bin
-	$(ARM_QEMU) $(QEMU_FLAGS) -kernel $< armdisk.img
+	$(ARM_QEMU) $(QEMU_FLAGS) -kernel $<
 
 .PHONY: qemugdb
 qemugdb: $(KERNEL).bin 

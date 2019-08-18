@@ -19,6 +19,10 @@ void MPU_setup() {
     MPU->RNR = 2;               // Select region 2, Enable User Prog + User Stack
     MPU->RBAR = 0x20004000;     // Base Address = 0x20004000
     MPU->RASR = 0x0300001B;     // All Access, TEX=0,S=0,C=0,B=0, 16KB, Enable=1
+                                // ---
+    MPU->RNR = 2;               // Select region 2, Enable Download Prog
+    MPU->RBAR = 0x20008000;     // Base Address = 0x20008000
+    MPU->RASR = 0x0300001B;     // All Access, TEX=0,S=0,C=0,B=0, 16KB, Enable=1
 
     MPU->CTRL = 1;
 

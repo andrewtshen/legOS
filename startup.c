@@ -96,7 +96,7 @@ void SVCHandler_main(unsigned int * svc_args) {
             /* Validate that it is from User Prog region */
             char *s = (char*)svc_args[0];
             int size = svc_args[1];
-            if (hex_to_int("20004000") > (int)s || (int)s+size > hex_to_int("20008000")) {
+            if (hex_to_int("20004000") > (int)s || (int)s+size > hex_to_int("2000C000")) {
                 UART_printf("ERR: Pointer given to SVC not in User Prog.\n");
                 break;
             }

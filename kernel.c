@@ -18,14 +18,12 @@ void load_userprog(uint8_t* _user_start_p, const uint8_t* bin_start, const uint8
 
     for (const uint8_t* i = bin_start; i < bin_end; i++) {
         *(_user_start_p) = *i;
-        UART_printf("%x ", *(_user_start_p));
-        UART_printf("%d ", *(_user_start_p));
         _user_start_p++;
     }
 }
 
 void main() {   
-    // /* Set up the MPU */
+    /* Set up the MPU */
     // MPU_setup();
 
     /* Switch to user mode and change the stack pointer */
@@ -49,6 +47,8 @@ void main() {
         } else if (choice == 3) {
             UART_printf("Download program: ");
             uint8_t* s = (uint8_t*)_DOWNLOAD_START;
+            UART_printf("Download start: %x\n", _DOWNLOAD_START);
+            UART_printf("Download end: %x\n", _DOWNLOAD_END);
             while(1) {
                 char a;
                 char b;
@@ -87,8 +87,14 @@ void main() {
                 else
                     write(c);
             }
-            write("\n");
+            write('\n');
         } else if (choice == 4) {
+            // uint8_t* s = (uint8_t)_DOWNLOAD_START;
+            // for (int i = 0; i < 3000; ++i)
+            // {
+            //     UART_printf("%x\n", *s);
+            //     s++;
+            // }
             launch_download();
         }
     }    

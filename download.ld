@@ -2,7 +2,7 @@ INCLUDE "mem.ld"
 
 SECTIONS
 {
-    . = 0x2000A000;         /* Start of Download Prog */
+    . = 0x20008000;         /* Start of Download Prog */
     .text : 
     {   
         KEEP(*(.init_text)) /* ASM to main function */
