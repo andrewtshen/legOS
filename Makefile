@@ -59,7 +59,7 @@ GLOABL_LINKERFILES := \
 	mem.ld
 
 ARM_C_FLAGS=-O0 -c -g -mcpu=cortex-m3 -mthumb -nostdlib -Wall -Wextra -fno-builtin
-QEMU_FLAGS=-M lm3s6965evb -m 128M -nographic -serial mon:stdio -no-reboot
+QEMU_FLAGS=-M lm3s6965evb -m size=128M -nographic -serial mon:stdio -no-reboot
 
 KERNEL=kernel
 
@@ -107,14 +107,13 @@ $(USER).elf: $(USER_OBJFILES) $(USER).ld
 $(USER2).elf: $(USER2_OBJFILES) $(USER).ld
 	$(ARM_LD) -Tuser.ld -o $@ $^
 
-$(DOWNLOAD).elf: $(DOWNLOAD_OBJFILES) $(DOWNLOAD).ld
-	$(ARM_LD) -Tdownload.ld -o $@ $^
+$(DOWNLOAD).elf: $(DOWNLOAD_OBJFILES) $(USER).ld
+	$(ARM_LD) -Tuser.ld -o $@ $^
 
 # Linker Files
 
 $(KERNEL).ld: $(GLOABL_LINKERFILES)
 $(USER).ld: $(GLOABL_LINKERFILES)
-$(DOWNLOAD).ld: $(GLOABL_LINKERFILES)
 
 %.o: %.c $(HEADERFILES)
 	$(ARM_CC) $(ARM_C_FLAGS) -o $@ $<

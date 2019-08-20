@@ -96,6 +96,14 @@ void main() {
             //     s++;
             // }
             launch_download();
+        } else if (choice == 5) {
+            char* c = (char*)0x20010000;
+            *c = 'A';
+            write('A');
+
+        } else if (choice == 6) {
+            char* c = (char*)0x20010000;
+            write(*c);
         }
     }    
 }
