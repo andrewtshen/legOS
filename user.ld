@@ -28,5 +28,5 @@ SECTIONS
     {
         *(.bss)             /* Zero-initialied data */
     }
-    ASSERT((. < 0x20008000), "overflowed available area")
+    ASSERT((. < 0x20006000), "overflowed available area")
 }

@@ -49,11 +49,15 @@ USER2_OBJFILES := \
 	scanf.o \
 
 DOWNLOAD_OBJFILES := \
-	printf.o \
-	string.o \
-	math.o \
 	download.o \
 	user_startup.o \
+	sum.o \
+	printf.o \
+	string.o \
+	UART.o \
+	math.o \
+	test.o \
+	scanf.o \
 
 GLOABL_LINKERFILES := \
 	mem.ld
