@@ -6,7 +6,7 @@
 #include "test.h"
 #include "scanf.h"
 
-int main() {
+void main() {
 
     printf("What is your favorite animal?: ");
     char name[20];

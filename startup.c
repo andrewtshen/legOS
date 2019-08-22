@@ -111,7 +111,7 @@ void SVCHandler_main(unsigned int * svc_args) {
             break;
 
         /* Unknown SVC */
-        default:     ;
+        default:
             break;
     }
 }

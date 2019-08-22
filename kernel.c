@@ -9,13 +9,13 @@ extern const uint8_t _binary_user_bin_start[];
 extern const uint8_t _binary_user_bin_end[];
 extern const uint8_t _binary_user2_bin_start[];
 extern const uint8_t _binary_user2_bin_end[];
-extern const uint8_t _USER_TEXT_START[];
-extern const uint8_t _PROG_SLOT_1[];
-extern const uint8_t _PROG_SLOT_2[];
-extern const uint8_t _PROG_SLOT_3[];
-extern const int _prog_slot_size[];
+extern uint8_t _USER_TEXT_START[];
+extern uint8_t _PROG_SLOT_1[];
+extern uint8_t _PROG_SLOT_2[];
+extern uint8_t _PROG_SLOT_3[];
+extern int _prog_slot_size[];
 
-void load_prog(const uint8_t* _user_start_p, const uint8_t* bin_start, const uint8_t *bin_end) {
+void load_prog(uint8_t* _user_start_p, const uint8_t* bin_start, const uint8_t *bin_end) {
     /* Copy user text from rodata to user prog */
     uint8_t* p = _user_start_p;
     for (const uint8_t* i = bin_start; i < bin_end; i++) {
@@ -73,35 +73,35 @@ void main() {
         UART_read_int(&choice);
 
         switch (choice) {
-            case 1: ;
+            case 1:
                 load_prog(_USER_TEXT_START, _binary_user_bin_start, _binary_user_bin_end);
                 launch();
                 break;
-            case 2: ;
+            case 2:
                 load_prog(_USER_TEXT_START, _binary_user2_bin_start, _binary_user2_bin_end);
                 launch();
                 break;
-            case 3: ;
+            case 3:
                 UART_printf("Which slot to download to?: ");
                 unsigned int slot_num;
                 UART_read_int(&slot_num);
                 switch (slot_num) {
-                    case 1: ;
+                    case 1: 
                         download_to_slot(_PROG_SLOT_1, (int)_prog_slot_size);
                         break;
-                    case 2: ;
+                    case 2: 
                         download_to_slot(_PROG_SLOT_2, (int)_prog_slot_size);
                         break;
-                    case 3: ;
+                    case 3: 
                         download_to_slot(_PROG_SLOT_3, (int)_prog_slot_size);
                         break;
-                    default: ;
+                    default:
                         UART_printf("Not an option."); 
                         break;
                 }
                 break;
-            case 4: ;
-                load_prog(_USER_TEXT_START, _PROG_SLOT_1, _PROG_SLOT_1+0x00001000);
+            case 4:
+                load_prog(_USER_TEXT_START, _PROG_SLOT_1, _PROG_SLOT_1+(int)_prog_slot_size);
                 launch();
                 break;
             default:
