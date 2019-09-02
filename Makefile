@@ -10,64 +10,48 @@ ARM_GDB=arm-none-eabi-gdb
 HEADERFILES := $(wildcard *.h)
 
 COMMON_OBJFILES := \
-	printf.o
+	printf.o \
+	math.o \
+	UART.o \
+	scanf.o \
+	string.o \
+	test.o \
 
 KERN_OBJFILES := \
 	kernel.o \
 	MPU.o \
 	startup.o \
-	test.o \
-	UART.o \
 	user.bin.o \
 	user2.bin.o \
 	download.bin.o \
 	launch.o \
-	printf.o \
 	SVC_Handler.o \
-	string.o \
-	math.o \
 	test.o \
-	scanf.o \
-	launch_download.o \
+	$(COMMON_OBJFILES) \
 
 USER_OBJFILES := \
 	user.o \
 	user_startup.o \
 	sum.o \
-	string.o \
-	UART.o \
-	math.o \
-	test.o \
-	scanf.o \
 	$(COMMON_OBJFILES) \
 
 USER2_OBJFILES := \
 	user2.o \
 	user_startup.o \
 	sum.o \
-	printf.o \
-	string.o \
-	UART.o \
-	math.o \
-	test.o \
-	scanf.o \
+	$(COMMON_OBJFILES) \
 
 DOWNLOAD_OBJFILES := \
 	download.o \
 	user_startup.o \
 	sum.o \
-	printf.o \
-	string.o \
-	UART.o \
-	math.o \
-	test.o \
-	scanf.o \
+	$(COMMON_OBJFILES) \
 
 GLOABL_LINKERFILES := \
 	mem.ld
 
 ARM_C_FLAGS=-O0 -c -g -mcpu=cortex-m3 -mthumb -nostdlib -Wall -Wextra -fno-builtin -ffreestanding
-QEMU_FLAGS=-M lm3s6965evb -m size=128M -nographic -serial mon:stdio -no-reboot
+QEMU_FLAGS=-M lm3s6965evb -m size=128M -nographic -serial pipe:guest -no-reboot
 
 KERNEL=kernel
 
@@ -77,7 +61,7 @@ USER2=user2
 DOWNLOAD=download
 
 .PHONY: all
-all: $(KERNEL).bin $(USER).elf $(USER2).elf $(DOWNLOAD).elf
+all: $(KERNEL).bin $(USER).bin $(USER2).bin $(DOWNLOAD).bin $(USER).elf $(USER2).elf $(DOWNLOAD).elf
 
 # Compile All Binaries
 
@@ -89,7 +73,7 @@ all: $(KERNEL).bin $(USER).elf $(USER2).elf $(DOWNLOAD).elf
 %.bin.o: %.bin
 	$(ARM_OBJCOPY) -I binary -B arm -O elf32-littlearm --rename-section .data=.rodata,contents,alloc,load,readonly,data $< $@ 
 
-# Build Elf Files CHECK: I added .ld files as dependencies
+# Build Elf Files
 
 $(KERNEL).elf: $(KERN_OBJFILES) $(KERNEL).ld
 	$(ARM_LD) -Tkernel.ld -o $@ $^

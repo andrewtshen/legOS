@@ -27,38 +27,21 @@ void download_to_slot(const uint8_t* _PROG_SLOT_num, int _prog_slot_size) {
     uint8_t* s = (uint8_t*)_PROG_SLOT_num;
     UART_printf("Download start: %x\n", _PROG_SLOT_num);
     UART_printf("Download end: %x\n", _PROG_SLOT_num+_prog_slot_size);
-    while(1) {
-        char a, b;
-
-        a = read();
-        if (a == '\r') break;
-        else write(a);
-
-        b = read();
-        if (b == '\r') break;
-        else write(b);
-
-        *s++ = hex_to_digit(a) * 16 + hex_to_digit(b);
-
-        a = read();
-        if (a == '\r') break;
-        else write(a);
-        b = read();
-        if (b == '\r') break;
-        else write(b);             
-
-        *s++ = hex_to_digit(a) * 16 + hex_to_digit(b);
-
-        char c = read(); // discard space
-        if (c == '\r') break;
-        else write(c);
+    UART_printf("Input size: ");
+    unsigned int size;
+    UART_read_int(&size);
+    if (_prog_slot_size <= (int)size) {
+        UART_printf("MAX PROG SIZE EXCEEDED.");
+    }
+    for (int i = 0; i < (int)size; i++) {
+        *s++ = read();
     }
     write('\n');
 }
 
 void main() {   
     /* Set up the MPU */
-    // MPU_setup();
+    MPU_setup();
 
     /* Switch to user mode and change the stack pointer */
 
@@ -72,6 +55,7 @@ void main() {
         unsigned int choice;
         UART_read_int(&choice);
 
+        unsigned int slot_num;
         switch (choice) {
             case 1:
                 load_prog(_USER_TEXT_START, _binary_user_bin_start, _binary_user_bin_end);
@@ -83,7 +67,7 @@ void main() {
                 break;
             case 3:
                 UART_printf("Which slot to download to?: ");
-                unsigned int slot_num;
+
                 UART_read_int(&slot_num);
                 switch (slot_num) {
                     case 1: 
@@ -101,7 +85,22 @@ void main() {
                 }
                 break;
             case 4:
-                load_prog(_USER_TEXT_START, _PROG_SLOT_1, _PROG_SLOT_1+(int)_prog_slot_size);
+                UART_printf("Which slot to launch from?: ");
+                UART_read_int(&slot_num);
+                switch (slot_num) {
+                    case 1: 
+                        load_prog(_USER_TEXT_START, _PROG_SLOT_1, _PROG_SLOT_1+(int)_prog_slot_size);
+                        break;
+                    case 2: 
+                        load_prog(_USER_TEXT_START, _PROG_SLOT_2, _PROG_SLOT_2+(int)_prog_slot_size);
+                        break;
+                    case 3: 
+                        load_prog(_USER_TEXT_START, _PROG_SLOT_3, _PROG_SLOT_3+(int)_prog_slot_size);
+                        break;
+                    default:
+                        UART_printf("Not an option."); 
+                        break;
+                }
                 launch();
                 break;
             default:
