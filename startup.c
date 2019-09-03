@@ -95,9 +95,10 @@ void SVCHandler_main(unsigned int * svc_args) {
         case SVC_00: ;
             /* Validate that it is from User Prog region */
             char *s = (char*)svc_args[0];
+            UART_printf("Pointer to print: %x", s);
             int size = svc_args[1];
-            if (hex_to_int("20004000") > (int)s || (int)s+size > hex_to_int("2000C000")) {
-                UART_printf("ERR: Pointer given to SVC not in User Prog.\n");
+            if (hex_to_int("20004000") > (int)s || (int)s+size > hex_to_int("20006000")) {
+                UART_printf("ERR: Pointer given to SVC not in User Program Space.\n");
                 break;
             }
             UART_write_buf(s, size);
