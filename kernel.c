@@ -3,6 +3,7 @@
 #include "MPU.h"
 #include "launch.h"
 #include "math.h"
+#include "printf.h"
 #include <stdint.h>
 
 extern const uint8_t _binary_user_bin_start[];
@@ -43,12 +44,11 @@ void main() {
     /* Set up the MPU */
     MPU_setup();
 
-    /* Switch to user mode and change the stack pointer */
-
     while (1) {
+        printf("Hello World");
         UART_printf("Which program to enter? \n");
-        UART_printf("1. name\n");
-        UART_printf("2. animal\n");
+        UART_printf("1. testprog (load from sys RAM) hello world\n");
+        UART_printf("2. testprog (load from sys RAM) favorite animal?\n");
         UART_printf("3. download\n");
         UART_printf("4. execute\n");
         UART_printf("Your choice: ");

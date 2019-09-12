@@ -102,6 +102,9 @@ $(USER).ld: $(GLOABL_LINKERFILES)
 clean:
 	rm -f *.o *.elf *.bin
 
+.PHONY: download
+download: $(DOWNLOAD).bin
+
 .PHONY: qemu
 qemu: $(KERNEL).bin
 	$(ARM_QEMU) $(QEMU_FLAGS) -kernel $<
