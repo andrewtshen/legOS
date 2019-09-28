@@ -1,11 +1,13 @@
 MAKEFLAGS += -r
 MAKEFLAGS += -R
 
-ARM_CC=arm-none-eabi-gcc
-ARM_LD=arm-none-eabi-ld
-ARM_OBJCOPY=arm-none-eabi-objcopy
-ARM_QEMU=qemu-system-arm
-ARM_GDB=arm-none-eabi-gdb
+PREFIX ?= arm-none-eabi-
+
+ARM_CC := $(PREFIX)gcc
+ARM_LD := $(PREFIX)ld
+ARM_OBJCOPY := $(PREFIX)objcopy
+ARM_QEMU = qemu-system-arm
+ARM_GDB := $(PREFIX)gdb
 
 HEADERFILES := $(wildcard *.h)
 
@@ -32,19 +34,16 @@ KERN_OBJFILES := \
 USER_OBJFILES := \
 	user.o \
 	user_startup.o \
-	sum.o \
 	$(COMMON_OBJFILES) \
 
 USER2_OBJFILES := \
 	user2.o \
 	user_startup.o \
-	sum.o \
 	$(COMMON_OBJFILES) \
 
 DOWNLOAD_OBJFILES := \
 	download.o \
 	user_startup.o \
-	sum.o \
 	$(COMMON_OBJFILES) \
 
 GLOABL_LINKERFILES := \

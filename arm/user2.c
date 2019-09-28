@@ -1,4 +1,3 @@
-#include "utility.h"
 #include "printf.h"
 #include "string.h"
 #include "UART.h"

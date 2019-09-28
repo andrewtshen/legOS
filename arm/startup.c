@@ -91,7 +91,7 @@ void SVCHandler_main(unsigned int * svc_args) {
 
     switch(svc_number) {
 
-        /* Handle SVC 00: Add from r0 and r1, display output */ 
+        /* Handle SVC 00: Read from address R0, and display length R1 memory */ 
         case SVC_00: ;
             /* Validate that it is from User Prog region */
             char *s = (char*)svc_args[0];
