@@ -91,7 +91,7 @@ void UART_printf(char *fmt, ...) {
     char *s;
     int c, i, state;
     int *ap;
-    ap = (int*)(void*)&fmt + 1;         // Pointer to the next argument (void*)&fmt gives the address on the stack, 
+    ap = (int*)(void*)fmt + 1;         // Pointer to the next argument (void*)&fmt gives the address on the stack, 
     
     char final[100];                    // merge fmt into one string, no print is going to be longer than 100
     strncpy(final, "", 100, 100);       // cleans final
@@ -115,16 +115,15 @@ void UART_printf(char *fmt, ...) {
                 UART_add_hex(*ap, final);
                 ap++;
             } else if(c == 's') {
-                UART_write_str((char*)ap);
+                /*UART_write_str((char*)0x80000fdc);*/
                 s = (char*)*ap;
                 ap++;
-                UART_write_str("S: ");
-                UART_write_str(s);
+                /*UART_write_str(s);*/
                 if(s == 0)
                     s = "(null)";
                 while(*s != 0) {
-                    UART_write_str("not null");
-                    UART_write_str(s);
+                    UART_write_str("*");
+                    write(*s);
                     strcatc(final, *s, 100);
                     s++;
                 }
