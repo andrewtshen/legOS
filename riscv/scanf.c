@@ -2,13 +2,16 @@
 #include "printf.h"
 
 void svc_read(char *c) {
+    // for now use read
+    return read();
+
     /*asm volatile ("MOV R0, %0" : : "r" (c));*/
     /*asm volatile ("PUSH {LR}");*/
     /*asm volatile ("svc 1");*/
     /*asm volatile ("POP {LR}");*/
 }
 
-void read_str(char *buf, int count) {
+void scanf(char *buf, int count) {
     for (int i = 0; i < count; i++) {
         svc_read(&buf[i]);
         printf("%c", buf[i]);      // Echo the output

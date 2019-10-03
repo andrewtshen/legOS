@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include "UART.h"
 #include "string.h"
 #include "math.h"
@@ -87,59 +88,76 @@ void UART_add_hex(unsigned int s, char *f) {
     }
 }
 
+static char digits[] = "0123456789abcdef";
+
+static void printint(int xx, int base, int sign) {
+    char buf[16];
+    int i;
+    int x;
+
+    if(sign && (sign = xx < 0))
+        x = -xx;
+    else
+        x = xx;
+
+    i = 0;
+    do {
+        buf[i++] = digits[x % base];
+    } while((x /= base) != 0);
+
+    if(sign)
+        buf[i++] = '-';
+
+    while(--i >= 0)
+        write(buf[i]);
+}
+
+static void printptr(int x) {
+    int i;
+    write('0');
+    write('x');
+    for (i = 0; i < (sizeof(int) * 2); i++, x <<= 4)
+        write(digits[x >> (sizeof(int) * 8 - 4)]);
+}
+
 void UART_printf(char *fmt, ...) {
+    va_list ap;
+    int i, c;
     char *s;
-    int c, i, state;
-    int *ap;
-    ap = (int*)(void*)fmt + 1;         // Pointer to the next argument (void*)&fmt gives the address on the stack, 
-    
-    char final[100];                    // merge fmt into one string, no print is going to be longer than 100
-    strncpy(final, "", 100, 100);       // cleans final
 
-    state = 0;
-                                        // first argument after the format string
-    for(i = 0; fmt[i] != '\0'; i++) {
-        c = fmt[i];
-        if(state == 0) {
-            if(c == '%') {
-                state = '%';
-            } else {
-                strcatc(final, c, 100);
-            }
-        } else if(state == '%') {
-            if(c == 'd'){
-                UART_add_int(*ap, final);
-
-                ap++;
-            } else if(c == 'x' || c == 'p') {
-                UART_add_hex(*ap, final);
-                ap++;
-            } else if(c == 's') {
-                /*UART_write_str((char*)0x80000fdc);*/
-                s = (char*)*ap;
-                ap++;
-                /*UART_write_str(s);*/
-                if(s == 0)
+    va_start(ap, fmt);
+    for(i = 0; (c = fmt[i] & 0xff) != 0; i++) {
+        if(c != '%') {
+            write(c);
+            continue;
+        }
+        c = fmt[++i] & 0xff;
+        if(c == 0)
+            break;
+        switch(c) {
+            case 'd':
+                printint(va_arg(ap, int), 10, 1);
+                break;
+            case 'x':
+                printint(va_arg(ap, int), 16, 1);
+                break;
+            case 'p':
+                printptr(va_arg(ap, int));
+                break;
+            case 's':
+                if((s = va_arg(ap, char*)) == 0)
                     s = "(null)";
-                while(*s != 0) {
-                    UART_write_str("*");
+                for(; *s; s++)
                     write(*s);
-                    strcatc(final, *s, 100);
-                    s++;
-                }
-            } else if(c == 'c') {
-                strcatc(final, *ap, 100);
-                ap++;
-            } else if(c == '%') {
-                strcatc(final, c, 100);
-            } else {
-                /* Unknown % sequence.  Print it to draw attention. */
-                strcatc(final, '%', 100);
-                strcatc(final, c, 100);
-            }
-            state = 0;
+                break;
+            case '%':
+                write('%');
+                break;
+            default:
+                // Print unknown % sequence to draw attention.
+                write('%');
+                write(c);
+                break;
         }
     }
-
-    UART_write_str(final);
 }
