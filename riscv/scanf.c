@@ -1,7 +1,8 @@
 #include "scanf.h"
 #include "printf.h"
+#include "UART.h"
 
-void svc_read(char *c) {
+char svc_read(char *c) {
     // for now use read
     return read();
 
