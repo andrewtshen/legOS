@@ -4,7 +4,7 @@ _stack_size = 0x1000;
 MEMORY
 {
     flash (rxai!w) : ORIGIN = 0x20400000, LENGTH = 0x1fc00000
-    ram (wxa!ri)   : ORIGIN = 0x80000000, LENGTH = 0x400000
+    ram (wxa!ri)   : ORIGIN = 0x80000000, LENGTH = 0x00400000
 }
 
 SECTIONS
@@ -13,6 +13,7 @@ SECTIONS
         . = ALIGN(4);
         _stext = .;
         *(.startup)
+        *(.kernelvec)
         *(.text .text.*)
         . = ALIGN(4);
         _etext = .;

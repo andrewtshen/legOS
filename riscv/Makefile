@@ -2,13 +2,12 @@ PREFIX ?= riscv64-unknown-elf-
 DEBUG ?= 1
 
 QEMU := qemu-system-riscv32
-QEMUFLAGS := -M sifive_e -serial stdio
+QEMUFLAGS := -M sifive_e -nographic 
 
 CC := $(PREFIX)gcc
 GDB := $(PREFIX)gdb
 OBJDUMP := $(PREFIX)objdump
 OBJDUMPFLAGS := --disassemble-all --source --section-headers --demangle
-
 
 CFLAGS := -march=rv32im -mabi=ilp32 -ffreestanding -nostdlib -O0
 ifeq ($(DEBUG),1)
@@ -17,6 +16,8 @@ endif
 
 OBJS := \
 	startup.o \
+	trap.o \
+	kernelvec.o \
 	main.o \
 	UART.o \
 	math.o \
