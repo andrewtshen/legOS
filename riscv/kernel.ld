@@ -1,9 +1,8 @@
 _stack_size = 0x1000;
-
-/* from https://github.com/sifive/freedom-e-sdk/blob/v201908-branch/bsp/qemu-sifive-e31/metal.default.lds */
+/* Used to use from https://github.com/sifive/freedom-e-sdk/blob/v201908-branch/bsp/qemu-sifive-e31/metal.default.lds */
+/* Now uses virt memory mapping */
 MEMORY
 {
-    flash (rxai!w) : ORIGIN = 0x20400000, LENGTH = 0x1fc00000
     ram (wxa!ri)   : ORIGIN = 0x80000000, LENGTH = 0x00400000
 }
 
@@ -17,7 +16,7 @@ SECTIONS
         *(.text .text.*)
         . = ALIGN(4);
         _etext = .;
-    } > flash
+    } > ram
 
     .rodata : {
         . = ALIGN(4);
@@ -25,14 +24,6 @@ SECTIONS
         *(.rodata .rodata.*)
         . = ALIGN(4);
         _erodata = .;
-    } > flash
-
-    .stack (NOLOAD) : {
-        . = ALIGN(8);
-        _sstack = .;
-        . = . + _stack_size;
-        . = ALIGN(8);
-        _estack = .;
     } > ram
 
     _sidata = LOADADDR(.data);
@@ -43,9 +34,9 @@ SECTIONS
         *(.data .data.*)
         . = ALIGN(4);
         _edata = .;
-    } > ram AT > flash
+    } > ram
 
-    .bss (NOLOAD) : {
+    .bss : {
         . = ALIGN(4);
         _sbss = .;
         *(.bss .bss.*)
@@ -53,4 +44,9 @@ SECTIONS
         . = ALIGN(4);
         _ebss = .;
     } > ram
+
+    . = . + _stack_size;
+    /* Make sure that stack pointer is 16 byte aligned */
+    . = ALIGN(16) ;
+    _estack = .;
 }

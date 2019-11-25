@@ -14,6 +14,7 @@ struct UART
 
 #define UART ((struct UART*) 0x10013000)
 
+void uartinit();
 void write(char c);
 char read();
 void UART_write_buf(const char* s, int size);

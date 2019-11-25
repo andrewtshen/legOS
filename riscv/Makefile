@@ -1,33 +1,38 @@
 PREFIX ?= riscv64-unknown-elf-
 DEBUG ?= 1
 
-QEMU := qemu-system-riscv32
-QEMUFLAGS := -M sifive_e -nographic 
+QEMU := qemu-system-riscv64
+QEMUFLAGS := -M virt -nographic 
 
 CC := $(PREFIX)gcc
 GDB := $(PREFIX)gdb
 OBJDUMP := $(PREFIX)objdump
 OBJDUMPFLAGS := --disassemble-all --source --section-headers --demangle
 
-CFLAGS := -march=rv32im -mabi=ilp32 -ffreestanding -nostdlib -O0
+CFLAGS := -ffreestanding -nostdlib -O0 -mcmodel=medany
 ifeq ($(DEBUG),1)
 	CFLAGS += -g
 endif
 
-OBJS := \
+KERNEL_OBJS := \
 	startup.o \
-	trap.o \
 	kernelvec.o \
-	main.o \
+	kernel.o \
 	UART.o \
 	math.o \
 	string.o \
 	scanf.o \
 	printf.o \
 
+USER_OBJS := \
+	printf.o \
+	string.o \
+	math.o \
+	UART.o \
+	user.o \
 
 .PHONY: all
-all: kernel.elf kernel.lst
+all: kernel.elf kernel.lst user.elf
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -35,8 +40,14 @@ all: kernel.elf kernel.lst
 %.o: %.s
 	$(CC) $(CFLAGS) -c $< -o $@
 
-kernel.elf: $(OBJS) kernel.ld
-	$(CC) $(CFLAGS) -T kernel.ld $(OBJS) -o $@
+kernel.elf: $(KERNEL_OBJS) kernel.ld
+	$(CC) $(CFLAGS) -T kernel.ld $(KERNEL_OBJS) -o $@
+
+user.elf: $(USER_OBJS) user.ld
+	$(CC) $(CFLAGS) -T user.ld $(USER_OBJS) -o $@
+
+# %.bin: %.elf
+# 	$(OBJDUMP) -O binary $< $@
 
 %.lst: %.elf
 	$(OBJDUMP) $(OBJDUMPFLAGS) $< > $@
@@ -55,4 +66,4 @@ qemu-gdb: kernel.elf
 
 .PHONY: gdb
 gdb: kernel.elf
-	$(GDB) kernel.elf
+	$(GDB) --data-directory=/usr/local/share/gdb kernel.elf
