@@ -8,27 +8,37 @@
 void user();
 extern void kernelvec();
 
+// Retrieve Proper NAPOT Address for Base and Size
+uint64_t get_pmp_napot_addr(uint64_t base, uint64_t size) {
+    uint64_t napot_size = ((size/2)-1);
+    //napot_size = 0x7FFF
+    uint64_t pmp_addr = (base + napot_size)>>2;
+    //pmp_addr = 0x1000_01FF
+    return pmp_addr;
+}
+
+static void pmp_init(void) {
+    // PMP region 0: user has RWX to their memory
+    w_pmpaddr0(get_pmp_napot_addr(0x80000000, 0x800000));
+    w_pmp0cfg(PMPCFG(0, PMPCFG_A_NAPOT, 1, 1, 1));
+
+    // PMP region 1: enable uart for all users
+    w_pmpaddr1(get_pmp_napot_addr(0x10000000, 0x800000));
+    w_pmp1cfg(PMPCFG(0, PMPCFG_A_NAPOT, 1, 1, 1));
+
+    // PMP region 2..6: unused
+
+    // PMP region 8: user has no access to entire memory range
+    w_pmpaddr8((~0L) >> 1);
+    w_pmp8cfg(PMPCFG(0, PMPCFG_A_NAPOT, 0, 0, 0));
+}
+
 void main() {
     // set up init
     uartinit();
 
-    // set up pmp, protecting kernel region
-    unsigned long kernel_start_pmp = 0x0;
-    kernel_start_pmp |= (PMP_WD | PMP_RD | PMP_XD | PMP_TOR);
-    printf("%x\n", kernel_start_pmp);
-    w_pmpcfg0(kernel_start_pmp);
-
-    unsigned long addr_start = 0x80000000;
-    w_pmpaddr0(addr_start);
-
-    unsigned long kernel_end_pmp = 0x0;
-    kernel_end_pmp |= (PMP_WE | PMP_RE | PMP_XE | PMP_TOR);
-    printf("%x\n", kernel_end_pmp);
-    w_pmpcfg0(kernel_end_pmp);
-
-    unsigned long addr_end = 0x90000000;
-    w_pmpaddr0(addr_end);
-
+    // set up pmp
+    pmp_init();
 
     // set M Previous Privilege mode to User Mode, for mret.
     unsigned long x = r_mstatus();
@@ -44,16 +54,7 @@ void main() {
     w_mtvec((uint64_t)kernelvec);
 
     // switch to supervisor mode and jump to main().
-    asm volatile("mret");
-
-    // char* name = "andrew";
-    // printf("Hello %s, it's good to meet you!\n", name);
-
-    // char animal[20];
-    // UART_printf("What did you see at the zoo?\n");
-    // UART_read_str(animal, 20);
-    
-    // UART_printf("You went to the zoo and see a %s.\n", animal);
+    mret();
 }
 
 void user() {

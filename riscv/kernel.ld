@@ -47,6 +47,6 @@ SECTIONS
 
     . = . + _stack_size;
     /* Make sure that stack pointer is 16 byte aligned */
-    . = ALIGN(16) ;
+    . = ALIGN(16);
     _estack = .;
 }

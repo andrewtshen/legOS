@@ -2,7 +2,7 @@ PREFIX ?= riscv64-unknown-elf-
 DEBUG ?= 1
 
 QEMU := qemu-system-riscv64
-QEMUFLAGS := -M virt -nographic 
+QEMUFLAGS := -M virt -nographic -bios none
 
 CC := $(PREFIX)gcc
 GDB := $(PREFIX)gdb
