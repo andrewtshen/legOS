@@ -7,6 +7,7 @@ QEMUFLAGS := -M virt -nographic -bios none
 CC := $(PREFIX)gcc
 GDB := $(PREFIX)gdb
 OBJDUMP := $(PREFIX)objdump
+OBJCOPY := $(PREFIX)objcopy
 OBJDUMPFLAGS := --disassemble-all --source --section-headers --demangle
 
 CFLAGS := -ffreestanding -nostdlib -O0 -mcmodel=medany
@@ -23,6 +24,7 @@ KERNEL_OBJS := \
 	string.o \
 	scanf.o \
 	printf.o \
+	user.bin.o \
 
 USER_OBJS := \
 	printf.o \
@@ -30,6 +32,7 @@ USER_OBJS := \
 	math.o \
 	UART.o \
 	user.o \
+	trampoline.o \
 
 .PHONY: all
 all: kernel.elf kernel.lst user.elf
@@ -46,8 +49,11 @@ kernel.elf: $(KERNEL_OBJS) kernel.ld
 user.elf: $(USER_OBJS) user.ld
 	$(CC) $(CFLAGS) -T user.ld $(USER_OBJS) -o $@
 
-# %.bin: %.elf
-# 	$(OBJDUMP) -O binary $< $@
+%.bin.o: %.bin
+	$(OBJCOPY) -I binary -B riscv -O elf64-littleriscv --rename-section .data=.rodata,contents,alloc,load,readonly,data $< $@ 
+
+%.bin: %.elf
+	$(OBJCOPY) -O binary $< $@
 
 %.lst: %.elf
 	$(OBJDUMP) $(OBJDUMPFLAGS) $< > $@

@@ -1,5 +1,56 @@
 #include "string.h"
 
+/* Copy Memory */
+void *memcpy(void *dst, const void *src, size_t n) {
+    char *d = dst;
+    const char *s = src;
+    while (n--) {
+       *(d++) = *(s++);
+    }
+    return dst;
+}
+
+/* Move Memory */
+void *memmove(void *dst, const void *src, size_t n) {
+    char *d = dst;
+    const char *s = src;
+    if (s == d) {
+        return dst;
+    } else if (d < s) {
+        // copy in forward direction
+        while (n--) {
+            *(d++) = *(s++);
+        }
+    } else {
+        // copy in reverse direction
+        d = d + n - 1;
+        s = s + n - 1;
+        while (n--) {
+            *(d--) = *(s--);
+        }
+    }
+    return dst;
+}
+
+/* First occurance of char in string */
+char *strchr(const char *str, int c) {
+    for (; *str; str++) {
+        if (*str == c) {
+            return (char *) str;
+        }
+    }
+    return NULL;
+}
+
+/* Set Memory */
+void *memset(void *ptr, int value, size_t num) {
+    char *p = ptr;
+    while (num--) {
+       *(p++) = value;
+    }
+    return ptr;
+}
+
 /* Return string length */
 int strlen(const char *s) {
     int n;

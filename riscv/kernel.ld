@@ -1,9 +1,9 @@
-_stack_size = 0x1000;
+_stack_size = 0x4096;
 /* Used to use from https://github.com/sifive/freedom-e-sdk/blob/v201908-branch/bsp/qemu-sifive-e31/metal.default.lds */
 /* Now uses virt memory mapping */
 MEMORY
 {
-    ram (wxa!ri)   : ORIGIN = 0x80000000, LENGTH = 0x00400000
+    ram (wxa!ri)   : ORIGIN = 0x80000000, LENGTH = 0x01000000
 }
 
 SECTIONS

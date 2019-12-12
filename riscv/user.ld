@@ -1,10 +1,8 @@
-_stack_size = 0x1000;
+_stack_size = 0x4096;
 
 SECTIONS
 {
-    . = 0x80101000;         /* 0x80100000 - 0x80101000 is the stack */
-    _USER_STACK_TOP = .;
-                            /* This program will use 0x80100000 - 0x80200000 */
+    . = 0x80800000;         /* User prog from 0x80800000 - 0x81000000 */
     .text : 
     {   
         KEEP(*(.init_text)) /* ASM to main function */
@@ -28,5 +26,8 @@ SECTIONS
     {
         *(.bss)             /* Zero-initialied data */
     }
-    ASSERT((. < 0x80200000), "overflowed available area")
+    . = . + _stack_size;
+    . = ALIGN(16);
+    _ustack = .;
+    ASSERT((. < 0x81000000), "overflowed available area")
 }

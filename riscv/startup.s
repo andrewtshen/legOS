@@ -3,8 +3,14 @@
 .global _startup
 .type _startup, %function
 _startup:
-    la sp, _estack
+    la sp, estack
     call main
-_junk:
-    j _junk
+_fallthrough:
+    j _fallthrough
 .size _startup, .-_startup
+
+.type estack, %object
+.align 16
+estack:
+    .fill 4096
+.size estack, .-estack
