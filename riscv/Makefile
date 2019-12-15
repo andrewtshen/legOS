@@ -1,7 +1,8 @@
 PREFIX ?= riscv64-unknown-elf-
 DEBUG ?= 1
 
-QEMU := qemu-system-riscv64
+# QEMU := qemu-system-riscv64
+QEMU := $(HOME)/Documents/primes2019/qemu/build/riscv64-softmmu/qemu-system-riscv64
 QEMUFLAGS := -M virt -nographic -bios none
 
 CC := $(PREFIX)gcc

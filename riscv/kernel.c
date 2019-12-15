@@ -36,35 +36,27 @@ static inline int ctz64(uint64_t val) {
 
 // Retrieve Proper NAPOT Address for Base and Size
 uint64_t get_pmp_napot_addr(uint64_t base, uint64_t size) {
+    if (base % size != 0) {
+        printf("PMP Fail Decoding\n");
+        return 0;
+    }
     uint64_t napot_size = ((size/2)-1);
-    printf("napot size: %x\n", napot_size);
-    printf("size: %x\n", size);
-    printf("base: %x\n", base);
     uint64_t pmp_addr = (base + napot_size)>>2;
-    printf("pmp_addr %x\n", pmp_addr);
-    printf("checking.\n");
-    pmp_decode_napot(pmp_addr);
-    printf("\n");
     return pmp_addr;
 }
 
 static void pmp_init(void) {
-    // PMP region 0: user has RWX to their memory
+    // // PMP region 0: user has RWX to their memory
     w_pmpaddr0(get_pmp_napot_addr(0x80800000L, 0x800000));
-    // w_pmpaddr0(get_pmp_napot_addr(0x80800000, 0x100000));
     w_pmp0cfg(PMPCFG(0, PMPCFG_A_NAPOT, 1, 1, 1));
 
     // PMP region 1: enable uart for all users
     w_pmpaddr1(get_pmp_napot_addr(0x10000000L, 0x800000L));
     w_pmp1cfg(PMPCFG(0, PMPCFG_A_NAPOT, 1, 1, 1));
 
-    // PMP region 2..6: unused
-
-    // PMP region 8: user has no access to entire memory range
-    // w_pmpaddr8((~0L) >> 1);
-    // pmp_decode_napot((~0L) >> 1); 
-    w_pmpaddr8(get_pmp_napot_addr(0x10000000L, 0x800000L));
-    w_pmp8cfg(PMPCFG(0, PMPCFG_A_NAPOT, 0, 0, 0));
+    // PMP region 2: user has no access to entire memory range
+    w_pmpaddr2((~0L) >> 1);
+    w_pmp2cfg(PMPCFG(0, PMPCFG_A_NAPOT, 0, 0, 0));
 }
 
 static void pmp_decode_napot(uint64_t a) {
