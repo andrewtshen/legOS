@@ -46,8 +46,8 @@ uint64_t get_pmp_napot_addr(uint64_t base, uint64_t size) {
 }
 
 static void pmp_init(void) {
-    // // PMP region 0: user has RWX to their memory
-    w_pmpaddr0(get_pmp_napot_addr(0x80800000L, 0x800000));
+    // PMP region 0: user has RWX to their memory
+    w_pmpaddr0(get_pmp_napot_addr(0x80800000L, 0x800000L));
     w_pmp0cfg(PMPCFG(0, PMPCFG_A_NAPOT, 1, 1, 1));
 
     // PMP region 1: enable uart for all users
@@ -55,8 +55,8 @@ static void pmp_init(void) {
     w_pmp1cfg(PMPCFG(0, PMPCFG_A_NAPOT, 1, 1, 1));
 
     // PMP region 2: user has no access to entire memory range
-    w_pmpaddr2((~0L) >> 1);
-    w_pmp2cfg(PMPCFG(0, PMPCFG_A_NAPOT, 0, 0, 0));
+    w_pmpaddr8((~0L) >> 1);
+    w_pmp8cfg(PMPCFG(0, PMPCFG_A_NAPOT, 0, 0, 0));
 }
 
 static void pmp_decode_napot(uint64_t a) {
@@ -80,9 +80,11 @@ static void pmp_decode_napot(uint64_t a) {
 void main() {
     // set up init
     uartinit();
+    printf("UART Set up complete.\n");
 
     // set up pmp
     pmp_init();
+    printf("PMP Set up complete.\n");
 
     // set M Previous Privilege mode to User Mode, for mret.
     unsigned long x = r_mstatus();

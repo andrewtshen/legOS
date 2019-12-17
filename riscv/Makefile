@@ -1,8 +1,10 @@
 PREFIX ?= riscv64-unknown-elf-
 DEBUG ?= 1
 
-# QEMU := qemu-system-riscv64
-QEMU := $(HOME)/Documents/primes2019/qemu/build/riscv64-softmmu/qemu-system-riscv64
+QEMU := qemu-system-riscv64
+# Use second QEMU for debugging purposes, rebuild in the qemu/build directory
+# edit in the qemu/target/riscv directory
+# QEMU := $(HOME)/Documents/primes2019/qemu/build/riscv64-softmmu/qemu-system-riscv64
 QEMUFLAGS := -M virt -nographic -bios none
 
 CC := $(PREFIX)gcc
