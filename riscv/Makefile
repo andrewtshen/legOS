@@ -20,6 +20,7 @@ endif
 
 KERNEL_OBJS := \
 	startup.o \
+	traphandler.o \
 	kernelvec.o \
 	kernel.o \
 	UART.o \
