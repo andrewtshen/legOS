@@ -7,7 +7,6 @@
 static const char *mcause_desc(uint64_t stval);
 
 void traphandler() {
-    int which_dev = 0;
     uint64_t mepc = r_mepc();
     uint64_t mstatus = r_mstatus();
     uint64_t mcause = r_mcause();
@@ -26,10 +25,10 @@ void traphandler() {
     w_mepc(mepc);
     w_mstatus(mstatus);
 
-    printf("mepc: %x\n", mepc);
-    printf("mstatus: %x\n", mstatus);
-    printf("mcause: %x\n", mcause);
-    printf("Looping\n");
+    printf("mepc: %p\n", mepc);
+    printf("mstatus: %p\n", mstatus);
+    printf("mcause: %p\n", mcause);
+    printf("Looping.\n");
     while (1) {
         ;
     }
