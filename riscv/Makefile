@@ -18,6 +18,23 @@ ifeq ($(DEBUG),1)
 	CFLAGS += -g
 endif
 
+V = 0
+ACTUAL_CC := $(CC)
+
+CC_0 = @printf ' |%-10s| $@ \n' 'CC'; $(ACTUAL_CC)
+CC_1 = $(ACTUAL_CC)
+CC = $(CC_$(V))
+
+ACTUAL_OBJDUMP := $(OBJDUMP)
+OBJDUMP_0 = @printf ' |%-10s| $@ \n' 'OBJDUMP'; $(ACTUAL_OBJDUMP)
+OBJDUMP_1 = $(ACTUAL_OBJDUMP)
+OBJDUMP = $(OBJDUMP_$(V))
+
+ACTUAL_OBJCOPY := $(OBJCOPY)
+OBJCOPY_0 = @printf ' |%-10s| $@ \n' 'OBJCOPY'; $(ACTUAL_OBJCOPY)
+OBJCOPY_1 = $(ACTUAL_OBJCOPY)
+OBJCOPY = $(OBJCOPY_$(V))
+
 KERNEL_OBJS := \
 	startup.o \
 	traphandler.o \
